@@ -1,501 +1,394 @@
 
-/* =========================================
-   AQUAFIND - SMART WATER LOCATOR
-   PROFESSIONAL BLUE & WHITE DESIGN
-========================================= */
+/* ==========================================
+   AQUAFIND - PREMIUM 3D BLUE DESIGN
+========================================== */
 
-/* GLOBAL RESET */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f1f7fc;
-    color: #243447;
-    line-height: 1.6;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, #d9f2ff, transparent 35%),
+    linear-gradient(135deg, #edf8ff, #dceeff, #f8fcff);
+  color: #15334d;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* HEADER */
+
 .main-header {
-    background: linear-gradient(135deg, #005baa, #008fc9, #00b4d8);
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 70, 130, 0.2);
+  background: linear-gradient(135deg, #0066cc, #003b80);
+  color: white;
+  padding: 25px 6%;
+  box-shadow: 0 10px 30px rgba(0, 65, 130, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.main-header::before {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  right: 8%;
+  top: -170px;
+  border: 35px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
 }
 
 .header-content {
-    max-width: 1100px;
-    margin: auto;
+  max-width: 1200px;
+  margin: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .logo {
-    font-size: 38px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.main-header p {
-    font-size: 17px;
-    margin-top: 5px;
+  font-size: 35px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
 .header-tagline {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 7px 16px;
-    border: 1px solid rgba(255,255,255,0.5);
-    border-radius: 25px;
-    font-size: 13px;
+  color: #d5edff;
+  margin-top: 5px;
+}
+
+.admin-link {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.35);
+  transition: 0.3s;
+}
+
+.admin-link:hover {
+  background: white;
+  color: #0055aa;
+  transform: translateY(-4px);
 }
 
 /* MAIN CONTAINER */
+
 .container {
-    width: 92%;
-    max-width: 1100px;
-    margin: 30px auto;
+  max-width: 1200px;
+  width: 92%;
+  margin: 35px auto;
 }
 
-/* WELCOME SECTION */
+/* WELCOME */
+
 .welcome-section {
-    text-align: center;
-    padding: 25px 15px;
+  text-align: center;
+  padding: 65px 25px;
+  margin-bottom: 30px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #0878d1, #00428b);
+  color: white;
+  box-shadow:
+    0 18px 35px rgba(0, 75, 150, 0.25),
+    inset 0 2px 3px rgba(255,255,255,0.3);
+  transform: perspective(1000px) rotateX(1deg);
 }
 
 .welcome-section h1 {
-    color: #075b9b;
-    font-size: 29px;
-    margin-bottom: 8px;
+  font-size: clamp(30px, 5vw, 48px);
+  margin-bottom: 15px;
+  text-shadow: 0 5px 12px rgba(0,0,0,0.25);
 }
 
 .welcome-section p {
-    color: #62768a;
-    font-size: 15px;
+  max-width: 750px;
+  margin: 10px auto;
+  color: #e5f5ff;
 }
 
-/* COMMON PANELS */
-.panel,
-.map-section,
-.water-section,
-.search-section,
-.complaint-section,
-.history-section {
-    background: white;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 70, 130, 0.07);
-    border: 1px solid #e3edf5;
+.welcome-section .note {
+  color: #fff;
 }
 
-/* SECTION HEADINGS */
+/* GLASS PANELS */
+
+.panel {
+  padding: 28px;
+  margin-bottom: 28px;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.9);
+  border-radius: 24px;
+  box-shadow:
+    0 12px 30px rgba(24, 91, 145, 0.12),
+    inset 0 1px 2px white;
+  backdrop-filter: blur(15px);
+  transition: transform 0.35s, box-shadow 0.35s;
+}
+
+.panel:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(24, 91, 145, 0.18);
+}
+
+/* HEADINGS */
+
 .section-heading {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-bottom: 20px;
+  color: #064c91;
+  font-size: 23px;
+  font-weight: 800;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .section-icon {
-    width: 43px;
-    height: 43px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #e5f5ff;
-    border-radius: 11px;
-    font-size: 22px;
-    flex-shrink: 0;
-}
-
-.section-heading h2,
-.map-section h2,
-.water-section h2,
-.complaint-section h2,
-.history-section h2 {
-    color: #075b9b;
-    font-size: 21px;
-    margin-bottom: 15px;
-}
-
-.section-heading p {
-    color: #8493a2;
-    font-size: 13px;
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #d7f2ff, #ffffff);
+  box-shadow: 5px 5px 12px #c6dce9,
+              -5px -5px 12px #ffffff;
 }
 
 /* INPUTS */
+
 input,
 select,
 textarea {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #d4e0ea;
-    border-radius: 9px;
-    background: #fbfdff;
-    color: #263746;
-    font-size: 15px;
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 16px;
-    transition: 0.3s;
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0 18px;
+  border: 1px solid #c6e1f5;
+  border-radius: 13px;
+  background: #f7fcff;
+  color: #15334d;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    border-color: #008bd0;
-    box-shadow: 0 0 0 3px rgba(0, 139, 208, 0.12);
-}
-
-textarea {
-    resize: vertical;
-    min-height: 110px;
-}
-
-/* LABELS */
-label {
-    display: block;
-    color: #31516b;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 7px;
+  border-color: #0088e8;
+  box-shadow: 0 0 0 4px rgba(0,136,232,0.12);
 }
 
 /* BUTTONS */
-button {
-    border: none;
-    border-radius: 9px;
-    padding: 13px 20px;
-    background: #0077c8;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s;
+
+button,
+.location-button,
+.submit-button {
+  border: none;
+  padding: 13px 22px;
+  border-radius: 13px;
+  color: white;
+  background: linear-gradient(145deg, #168ee5, #0055b8);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 7px 0 #003d87,
+              0 12px 20px rgba(0,80,160,0.2);
+  transition: 0.2s;
 }
 
 button:hover {
-    background: #005fa5;
-    transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 #003d87,
+              0 16px 24px rgba(0,80,160,0.25);
+}
+
+button:active {
+  transform: translateY(4px);
+  box-shadow: 0 3px 0 #003d87;
 }
 
 button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+  opacity: 0.7;
+  cursor: wait;
 }
 
-/* SEARCH SECTION */
-.search-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.search-section input {
-    margin-bottom: 0;
-}
-
-.search-section button,
 .location-button {
-    width: 100%;
-    background: #00a878;
-}
-
-.search-section button:hover,
-.location-button:hover {
-    background: #00845d;
-}
-
-.helper-text {
-    color: #8293a3;
-    font-size: 12px;
-    margin-top: 10px;
-    text-align: center;
+  margin-top: 5px;
 }
 
 /* MAP */
+
 #map {
-    width: 100%;
-    height: 450px !important;
-    min-height: 450px;
-    border-radius: 12px;
-    border: 1px solid #d5e3ee;
-    overflow: hidden;
-    z-index: 1;
-    background: #e7f0f5;
+  width: 100%;
+  height: 450px;
+  border-radius: 20px;
+  border: 4px solid white;
+  box-shadow: 0 12px 28px rgba(0,65,120,0.2);
+  z-index: 1;
 }
 
 .map-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 12px 5px 0;
-    color: #526a7e;
-    font-size: 13px;
+  margin-top: 18px;
+  padding: 15px;
+  border-radius: 14px;
+  background: #e9f6ff;
 }
 
 .note,
-.map-note {
-    color: #8493a2;
-    font-size: 12px;
-    margin-top: 10px;
+.helper-text {
+  color: #58748b;
+  font-size: 13px;
+  margin-top: 12px;
 }
 
-/* WATER POINT LIST */
-.water-list,
-#waterList {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 18px;
+/* WATER POINT CARDS */
+
+.water-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 22px;
 }
 
 .water-card {
-    padding: 18px;
-    background: #f6fbff;
-    border: 1px solid #dceaf5;
-    border-left: 4px solid #00a1d6;
-    border-radius: 11px;
-    transition: 0.3s;
+  padding: 22px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #ffffff, #e9f5ff);
+  border: 1px solid #d5ebfa;
+  box-shadow: 8px 8px 18px rgba(35,100,150,0.13),
+              -5px -5px 15px white;
+  transition: 0.3s;
 }
 
 .water-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 80, 140, 0.12);
+  transform: perspective(800px) translateY(-7px) rotateX(2deg);
+  box-shadow: 12px 18px 28px rgba(35,100,150,0.2);
 }
 
 .water-card h3 {
-    color: #0066a8;
-    font-size: 17px;
-    margin-bottom: 9px;
+  color: #0059a8;
+  margin-bottom: 12px;
 }
 
 .water-card p {
-    color: #596d80;
-    font-size: 13px;
-    margin-bottom: 7px;
-    overflow-wrap: anywhere;
+  margin: 7px 0;
+  font-size: 14px;
 }
 
 .water-card button {
-    margin-top: 9px;
-    margin-right: 5px;
-    padding: 10px 12px;
-    font-size: 12px;
+  margin-top: 14px;
+  margin-right: 5px;
+  padding: 10px 13px;
+  font-size: 13px;
 }
 
 /* COMPLAINT FORM */
-.complaint-section form {
-    display: flex;
-    flex-direction: column;
+
+.complaint-section label {
+  font-weight: 700;
+  color: #174c76;
 }
 
-.submit-button,
-.complaint-section button {
-    width: 100%;
-    background: #0077c8;
-    margin-top: 5px;
-}
-
-.submit-button:hover,
-.complaint-section button:hover {
-    background: #005fa5;
+.submit-button {
+  width: 100%;
+  margin-top: 10px;
 }
 
 /* COMPLAINT HISTORY */
+
 #complaintHistory {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 15px;
+  display: grid;
+  gap: 15px;
 }
 
 .complaint-card {
-    background: #f6fbff;
-    border: 1px solid #dceaf5;
-    border-radius: 10px;
-    padding: 17px;
-    overflow-wrap: anywhere;
+  background: linear-gradient(135deg, #f1faff, #ffffff);
+  border-left: 5px solid #0787db;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 7px 18px rgba(0,70,130,0.1);
 }
 
 .complaint-card h3 {
-    color: #006ba9;
-    margin-bottom: 8px;
-    font-size: 16px;
+  color: #0059a8;
 }
 
-.complaint-card p {
-    color: #536a7e;
-    font-size: 13px;
-    margin-bottom: 6px;
-}
+/* ABOUT */
 
-.complaint-card small {
-    color: #8595a5;
-    font-size: 11px;
-}
-
-/* PROJECT INFORMATION */
-.project-info,
-.about-section {
-    background: #e5f5ff;
-    border-left: 5px solid #008fca;
-    padding: 23px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-}
-
-.project-info h2,
-.about-section h2 {
-    color: #075b9b;
-    margin-bottom: 9px;
-    font-size: 20px;
-}
-
-.project-info p,
 .about-section p {
-    color: #526a7e;
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-/* ADMIN DASHBOARD LINK */
-.admin-link-section {
-    text-align: center;
-    margin: 25px 0;
-}
-
-.admin-link-section a {
-    display: inline-block;
-    background: #075b9b;
-    color: white;
-    padding: 13px 22px;
-    text-decoration: none;
-    border-radius: 9px;
-    font-weight: bold;
-}
-
-.admin-link-section a:hover {
-    background: #004477;
+  margin-bottom: 12px;
 }
 
 /* FOOTER */
+
 footer {
-    background: #063b63;
-    color: white;
-    text-align: center;
-    padding: 28px 15px;
-    margin-top: 35px;
+  text-align: center;
+  padding: 28px 15px;
+  background: linear-gradient(135deg, #003b80, #0066cc);
+  color: white;
+  margin-top: 40px;
 }
 
-footer h3 {
-    font-size: 22px;
-    margin-bottom: 5px;
-}
+/* MOBILE */
 
-footer p {
-    font-size: 13px;
-    color: #d4e7f5;
-    margin-top: 4px;
-}
-
-/* LEAFLET GPS MARKER */
-.user-location-marker {
-    background: #0878d1;
-    border: 3px solid white;
-    border-radius: 50%;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-/* MOBILE RESPONSIVE */
 @media (max-width: 600px) {
 
-    .main-header {
-        padding: 30px 12px;
-    }
+  .main-header {
+    padding: 20px;
+  }
 
-    .logo {
-        font-size: 30px;
-    }
+  .logo {
+    font-size: 28px;
+  }
 
-    .main-header p {
-        font-size: 14px;
-    }
+  .container {
+    width: 94%;
+    margin: 20px auto;
+  }
 
-    .header-tagline {
-        font-size: 11px;
-    }
+  .welcome-section {
+    padding: 40px 18px;
+  }
 
-    .container {
-        width: 94%;
-        margin: 18px auto;
-    }
+  .panel {
+    padding: 19px;
+    border-radius: 18px;
+  }
 
-    .welcome-section h1 {
-        font-size: 23px;
-    }
+  .section-heading {
+    font-size: 19px;
+  }
 
-    .welcome-section p {
-        font-size: 13px;
-    }
+  #map {
+    height: 350px;
+  }
 
-    .panel,
-    .map-section,
-    .water-section,
-    .search-section,
-    .complaint-section,
-    .history-section {
-        padding: 17px;
-        margin-bottom: 18px;
-    }
+  .water-list {
+    grid-template-columns: 1fr;
+  }
 
-    .section-heading h2,
-    .map-section h2,
-    .water-section h2,
-    .complaint-section h2,
-    .history-section h2 {
-        font-size: 18px;
-    }
-
-    .section-icon {
-        width: 38px;
-        height: 38px;
-        font-size: 19px;
-    }
-
-    #map {
-        height: 350px !important;
-        min-height: 350px;
-    }
-
-    .water-list,
-    #waterList,
-    #complaintHistory {
-        grid-template-columns: 1fr;
-    }
-
-    .water-card button {
-        margin: 7px 3px 0 0;
-    }
-
-    .map-legend {
-        gap: 10px;
-        font-size: 11px;
-    }
+  .water-card button {
+    width: 100%;
+    margin: 7px 0;
+  }
 }
 
-/* ACCESSIBILITY */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-a:focus-visible {
-    outline: 3px solid rgba(0, 119, 200, 0.25);
-    outline-offset: 2px;
+/* ACCESSIBILITY: REDUCE MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
