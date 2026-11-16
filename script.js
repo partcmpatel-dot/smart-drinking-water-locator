@@ -2,27 +2,115 @@
 // AQUAFIND - Smart Drinking Water Locator
 
 const waterPoints = [
+  
+const waterPoints = [
   {
     name: "Demo Water Point 1",
+    area: "Kharar Main Market",
+    lat: 30.7465,
+    lng: 76.6465,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 2",
+    area: "Kharar Bus Stand",
+    lat: 30.7445,
+    lng: 76.6475,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 3",
+    area: "Kharar Landran Road",
+    lat: 30.7395,
+    lng: 76.6550,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 4",
+    area: "Sunny Enclave, Kharar",
+    lat: 30.7215,
+    lng: 76.6450,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 5",
+    area: "Landran, Mohali",
+    lat: 30.6870,
+    lng: 76.6500,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 6",
+    area: "Airport Road, Mohali",
+    lat: 30.6750,
+    lng: 76.7350,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 7",
+    area: "Phase 3B2, Mohali",
+    lat: 30.7100,
+    lng: 76.7180,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 8",
+    area: "Phase 7, Mohali",
+    lat: 30.7050,
+    lng: 76.7080,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 9",
     area: "Sector 17, Chandigarh",
     lat: 30.7415,
     lng: 76.7820,
     status: "Demo listing"
   },
   {
-    name: "Demo Water Point 2",
+    name: "Demo Water Point 10",
     area: "Sector 22, Chandigarh",
     lat: 30.7330,
     lng: 76.7720,
     status: "Demo listing"
   },
   {
-    name: "Demo Water Point 3",
+    name: "Demo Water Point 11",
     area: "Sector 35, Chandigarh",
     lat: 30.7190,
     lng: 76.7510,
     status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 12",
+    area: "Sector 15, Chandigarh",
+    lat: 30.7590,
+    lng: 76.7680,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 13",
+    area: "Sector 43, Chandigarh",
+    lat: 30.7140,
+    lng: 76.7560,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 14",
+    area: "Sector 34, Chandigarh",
+    lat: 30.7250,
+    lng: 76.7620,
+    status: "Demo listing"
+  },
+  {
+    name: "Demo Water Point 15",
+    area: "Sector 26, Chandigarh",
+    lat: 30.7270,
+    lng: 76.8010,
+    status: "Demo listing"
   }
+];
+
 ];
 
 let userLocation = null;
