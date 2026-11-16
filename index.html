@@ -1,23 +1,147 @@
-<!-- AQUAFIND APP ICON -->
-<link
-    rel="icon"
-    type="image/png"
-    href="./icons/icon-192.png"
->
 
-<!-- iPHONE HOME SCREEN ICON -->
-<link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="./icons/apple-touch-icon.png"
->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ANDROID PWA -->
-<link rel="manifest" href="./manifest.json">
+  <title>AquaFind - Smart Water Locator</title>
 
-<!-- APP THEME -->
-<meta name="theme-color" content="#0877bd">
+  <meta name="theme-color" content="#0877bd">
+  <meta name="description" content="AquaFind Smart Drinking Water Locator">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="AquaFind">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="./style.css">
+
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+
+  <header class="main-header">
+    <div class="header-content">
+      <h2>💧 AquaFind</h2>
+      <p>Smart Drinking Water Locator</p>
+    </div>
+  </header>
+
+  <section class="hero-3d">
+    <div class="hero-drop">💧</div>
+    <h1>Welcome to AquaFind</h1>
+    <p>Find listed drinking water points near you.</p>
+    <a href="#locator" class="hero-button">Find Water</a>
+    <a href="#complaints" class="hero-button">Report Problem</a>
+    <button id="installBtn" style="display:none">
+      Install AquaFind
+    </button>
+  </section>
+
+  <main class="container">
+
+    <section class="feature-grid">
+      <div class="feature-card">
+        <h2>📍</h2>
+        <h3>GPS Location</h3>
+        <p>Find your current location.</p>
+      </div>
+
+      <div class="feature-card">
+        <h2>🚰</h2>
+        <h3>Water Locator</h3>
+        <p>Explore listed water points.</p>
+      </div>
+
+      <div class="feature-card">
+        <h2>📢</h2>
+        <h3>Complaints</h3>
+        <p>Report water point problems.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="locator">
+      <h2 class="section-heading">📍 Find Drinking Water</h2>
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search water point or area">
+
+      <button id="locationBtn">📍 Use My Location</button>
+
+      <p class="demo-warning">
+        Demo listings only. Water availability and safety
+        have not been independently verified.
+      </p>
+
+      <h3>Water Points Map</h3>
+      <div id="map"></div>
+
+      <h3>Water Point Listings</h3>
+      <div id="waterList">Loading water points...</div>
+    </section>
+
+    <section class="panel" id="complaints">
+      <h2 class="section-heading">📢 Report a Problem</h2>
+
+      <form id="complaintForm">
+        <label for="personName">Your Name</label>
+        <input id="personName" type="text"
+          placeholder="Enter your name" required>
+
+        <label for="problemType">Problem Type</label>
+        <select id="problemType" required>
+          <option value="">Select a problem</option>
+          <option>Water Not Available</option>
+          <option>Dirty Water</option>
+          <option>Broken Tap</option>
+          <option>Maintenance Required</option>
+          <option>Other</option>
+        </select>
+
+        <label for="problemDescription">Description</label>
+        <textarea id="problemDescription"
+          placeholder="Describe the problem"
+          rows="4" required></textarea>
+
+        <button type="submit">Submit Complaint</button>
+      </form>
+
+      <h3>My Complaint History</h3>
+      <div id="complaintHistory">
+        No complaints submitted yet.
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-heading">Administration</h2>
+      <a href="./admin.html" class="admin-link">
+        Open Admin Dashboard
+      </a>
+    </section>
+
+  </main>
+
+  <footer>
+    <h3>💧 AquaFind</h3>
+    <p>Smart Drinking Water Locator System</p>
+    <p>Design Thinking Project</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./script.js"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .catch(error => console.error("PWA error:", error));
+      });
+    }
+  </script>
+
+</body>
+</html>
