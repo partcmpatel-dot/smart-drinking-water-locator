@@ -31,7 +31,30 @@ let markerLayer = null;
 let userMarker = null;
 let accuracyCircle = null;
 
-// 3. INITIALIZE MAP
+// 3. COMPLAINT STORAGE
+const COMPLAINT_KEY = "aquafindComplaints";
+
+function getComplaints() {
+  try {
+    const data = JSON.parse(localStorage.getItem(COMPLAINT_KEY) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error("Could not read complaints:", error);
+    return [];
+  }
+}
+
+function saveComplaints(complaints) {
+  try {
+    localStorage.setItem(COMPLAINT_KEY, JSON.stringify(complaints));
+    return true;
+  } catch (error) {
+    console.error("Could not save complaints:", error);
+    return false;
+  }
+}
+
+// 4. INITIALIZE MAP
 function initializeMap() {
   const mapElement = document.getElementById("map");
 
@@ -47,6 +70,8 @@ function initializeMap() {
     return;
   }
 
+  if (map) return;
+
   map = L.map("map").setView([30.7333, 76.7794], 11);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -60,7 +85,7 @@ function initializeMap() {
   setTimeout(() => map.invalidateSize(), 1500);
 }
 
-// 4. DISTANCE CALCULATION
+// 5. DISTANCE CALCULATION
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const toRad = value => value * Math.PI / 180;
@@ -77,7 +102,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// 5. DISPLAY WATER POINTS
+// 6. DISPLAY WATER POINTS
 function displayWaterPoints() {
   const list = document.getElementById("waterList");
 
@@ -93,12 +118,8 @@ function displayWaterPoints() {
 
   if (userLocation) {
     filtered.sort((a, b) =>
-      calculateDistance(
-        userLocation.lat, userLocation.lng, a.lat, a.lng
-      ) -
-      calculateDistance(
-        userLocation.lat, userLocation.lng, b.lat, b.lng
-      )
+      calculateDistance(userLocation.lat, userLocation.lng, a.lat, a.lng) -
+      calculateDistance(userLocation.lat, userLocation.lng, b.lat, b.lng)
     );
   }
 
@@ -138,7 +159,8 @@ function displayWaterPoints() {
 
       const distanceText = document.createElement("p");
       distanceText.textContent =
-        "📏 Distance: " + distance.toFixed(2) + " km";
+        "📏 Approximate straight-line distance: " +
+        distance.toFixed(2) + " km";
 
       card.appendChild(distanceText);
     }
@@ -153,14 +175,13 @@ function displayWaterPoints() {
 
     const directionButton = document.createElement("button");
     directionButton.textContent = "Get Directions";
-    directionButton.style.marginLeft = "8px";
 
     directionButton.addEventListener("click", () => {
       const url =
         "https://www.google.com/maps/dir/?api=1&destination=" +
         encodeURIComponent(`${point.lat},${point.lng}`);
 
-      window.open(url, "_blank");
+      window.open(url, "_blank", "noopener,noreferrer");
     });
 
     card.append(mapButton, directionButton);
@@ -168,7 +189,7 @@ function displayWaterPoints() {
   });
 }
 
-// 6. SEARCH FUNCTION
+// 7. SEARCH
 function setupSearch() {
   const searchInput = document.getElementById("searchInput");
 
@@ -180,14 +201,13 @@ function setupSearch() {
   });
 }
 
-// 7. GPS FUNCTION - SHOW USER LOCATION
+// 8. GPS LOCATION
 function setupGPS() {
   const locationButton = document.getElementById("locationBtn");
 
   if (!locationButton) return;
 
   locationButton.addEventListener("click", () => {
-
     if (!navigator.geolocation) {
       alert("GPS is not supported by your browser.");
       return;
@@ -202,24 +222,15 @@ function setupGPS() {
     locationButton.textContent = "Finding location...";
 
     navigator.geolocation.getCurrentPosition(
-
-      // SUCCESS
       position => {
         userLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
 
-        // Remove previous GPS marker
-        if (userMarker) {
-          map.removeLayer(userMarker);
-        }
+        if (userMarker) map.removeLayer(userMarker);
+        if (accuracyCircle) map.removeLayer(accuracyCircle);
 
-        if (accuracyCircle) {
-          map.removeLayer(accuracyCircle);
-        }
-
-        // Create current location marker
         userMarker = L.marker([
           userLocation.lat,
           userLocation.lng
@@ -229,7 +240,6 @@ function setupGPS() {
           "<b>📍 Your Current Location</b>"
         ).openPopup();
 
-        // Add GPS accuracy circle
         accuracyCircle = L.circle([
           userLocation.lat,
           userLocation.lng
@@ -240,13 +250,11 @@ function setupGPS() {
           fillOpacity: 0.15
         }).addTo(map);
 
-        // Zoom into current location
         map.setView([
           userLocation.lat,
           userLocation.lng
         ], 15);
 
-        // Recalculate distances
         displayWaterPoints();
 
         locationButton.textContent = "📍 Location Found";
@@ -255,7 +263,6 @@ function setupGPS() {
         alert("Your location is now displayed on the map!");
       },
 
-      // ERROR
       error => {
         locationButton.textContent = "📍 Find My Location";
         locationButton.disabled = false;
@@ -263,9 +270,9 @@ function setupGPS() {
         let message = "Unable to get your location.";
 
         if (error.code === 1) {
-          message = "Location permission denied. Allow location access in your browser settings.";
+          message = "Location permission denied. Allow location access in browser settings.";
         } else if (error.code === 2) {
-          message = "Location unavailable. Check your device location settings and try again.";
+          message = "Location unavailable. Check your device location settings.";
         } else if (error.code === 3) {
           message = "Location request timed out. Please try again.";
         }
@@ -283,22 +290,13 @@ function setupGPS() {
   });
 }
 
-// 8. SHOW COMPLAINT HISTORY
+// 9. SHOW COMPLAINT HISTORY
 function showComplaints() {
   const history = document.getElementById("complaintHistory");
 
   if (!history) return;
 
-  let complaints = [];
-
-  try {
-    complaints = JSON.parse(
-      localStorage.getItem("aquafindComplaints") || "[]"
-    );
-  } catch (error) {
-    console.error("Complaint history error:", error);
-  }
-
+  const complaints = getComplaints();
   history.innerHTML = "";
 
   if (complaints.length === 0) {
@@ -306,28 +304,31 @@ function showComplaints() {
     return;
   }
 
-  complaints.forEach(item => {
+  complaints.slice().reverse().forEach(item => {
     const card = document.createElement("div");
     card.className = "complaint-card";
 
     const heading = document.createElement("h3");
-    heading.textContent = item.problem;
+    heading.textContent = item.problem || "Water problem";
 
     const name = document.createElement("p");
-    name.textContent = "Reported by: " + item.name;
+    name.textContent = "Reported by: " + (item.name || "Anonymous");
 
     const description = document.createElement("p");
-    description.textContent = item.description;
+    description.textContent = item.description || "";
 
     const date = document.createElement("small");
-    date.textContent = item.date;
+    date.textContent = item.date || "";
 
-    card.append(heading, name, description, date);
+    const status = document.createElement("p");
+    status.textContent = "Status: " + (item.status || "Pending");
+
+    card.append(heading, name, description, date, status);
     history.appendChild(card);
   });
 }
 
-// 9. COMPLAINT FORM
+// 10. COMPLAINT FORM
 function setupComplaintForm() {
   const form = document.getElementById("complaintForm");
 
@@ -346,29 +347,18 @@ function setupComplaintForm() {
       return;
     }
 
-    let complaints = [];
-
-    try {
-      complaints = JSON.parse(
-        localStorage.getItem("aquafindComplaints") || "[]"
-      );
-    } catch (error) {
-      complaints = [];
-    }
+    const complaints = getComplaints();
 
     complaints.push({
+      id: Date.now().toString(),
       name,
       problem,
       description,
-      date: new Date().toLocaleString()
+      date: new Date().toLocaleString(),
+      status: "Pending"
     });
 
-    try {
-      localStorage.setItem(
-        "aquafindComplaints",
-        JSON.stringify(complaints)
-      );
-    } catch (error) {
+    if (!saveComplaints(complaints)) {
       alert("Could not save complaint in this browser.");
       return;
     }
@@ -380,7 +370,7 @@ function setupComplaintForm() {
   });
 }
 
-// 10. START AQUAFIND ONLY ONCE
+// 11. START AQUAFIND
 document.addEventListener("DOMContentLoaded", () => {
   initializeMap();
   setupSearch();
