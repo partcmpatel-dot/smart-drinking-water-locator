@@ -1,5 +1,8 @@
 
-// AQUAFIND - Smart Drinking Water Locator
+// ==========================================
+// AQUAFIND - SMART DRINKING WATER LOCATOR
+// Complete JavaScript
+// ==========================================
 
 // 1. DEMO WATER POINTS
 const waterPoints = [
@@ -20,22 +23,26 @@ const waterPoints = [
   { name: "Demo Water Point 15", area: "Sector 26, Chandigarh", lat: 30.7270, lng: 76.8010, status: "Demo listing" }
 ];
 
+// 2. GLOBAL VARIABLES
 let userLocation = null;
 let searchText = "";
-let map;
-let markerLayer;
+let map = null;
+let markerLayer = null;
+let userMarker = null;
+let accuracyCircle = null;
 
-// 2. INITIALIZE MAP
+// 3. INITIALIZE MAP
 function initializeMap() {
   const mapElement = document.getElementById("map");
 
   if (!mapElement) {
-    console.error("Map container #map not found.");
+    console.error("Map container not found.");
     return;
   }
 
   if (typeof L === "undefined") {
-    mapElement.innerHTML = "Map library could not load. Please check your internet connection and refresh.";
+    mapElement.textContent =
+      "Map library failed to load. Check your internet connection.";
     console.error("Leaflet library is missing.");
     return;
   }
@@ -49,17 +56,11 @@ function initializeMap() {
 
   markerLayer = L.layerGroup().addTo(map);
 
-  // Fix map display if the page layout loads slowly
-  setTimeout(() => {
-    map.invalidateSize();
-  }, 500);
-
-  setTimeout(() => {
-    map.invalidateSize();
-  }, 1500);
+  setTimeout(() => map.invalidateSize(), 500);
+  setTimeout(() => map.invalidateSize(), 1500);
 }
 
-// 3. DISTANCE CALCULATION
+// 4. DISTANCE CALCULATION
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const toRad = value => value * Math.PI / 180;
@@ -76,20 +77,14 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// 4. DISPLAY WATER POINTS
+// 5. DISPLAY WATER POINTS
 function displayWaterPoints() {
   const list = document.getElementById("waterList");
 
-  if (!list) return;
-
-  list.innerHTML = "";
-
-  if (!map || !markerLayer) {
-    list.textContent = "Map is still loading. Please refresh the page.";
-    return;
-  }
+  if (!list || !map || !markerLayer) return;
 
   markerLayer.clearLayers();
+  list.innerHTML = "";
 
   let filtered = waterPoints.filter(point =>
     point.name.toLowerCase().includes(searchText) ||
@@ -98,8 +93,12 @@ function displayWaterPoints() {
 
   if (userLocation) {
     filtered.sort((a, b) =>
-      calculateDistance(userLocation.lat, userLocation.lng, a.lat, a.lng) -
-      calculateDistance(userLocation.lat, userLocation.lng, b.lat, b.lng)
+      calculateDistance(
+        userLocation.lat, userLocation.lng, a.lat, a.lng
+      ) -
+      calculateDistance(
+        userLocation.lat, userLocation.lng, b.lat, b.lng
+      )
     );
   }
 
@@ -169,7 +168,7 @@ function displayWaterPoints() {
   });
 }
 
-// 5. SEARCH
+// 6. SEARCH FUNCTION
 function setupSearch() {
   const searchInput = document.getElementById("searchInput");
 
@@ -181,58 +180,110 @@ function setupSearch() {
   });
 }
 
-// 6. GPS LOCATION
+// 7. GPS FUNCTION - SHOW USER LOCATION
 function setupGPS() {
   const locationButton = document.getElementById("locationBtn");
 
   if (!locationButton) return;
 
   locationButton.addEventListener("click", () => {
+
     if (!navigator.geolocation) {
       alert("GPS is not supported by your browser.");
       return;
     }
 
-    locationButton.textContent = "Finding location...";
+    if (!map) {
+      alert("Map is not ready. Please refresh the page.");
+      return;
+    }
+
     locationButton.disabled = true;
+    locationButton.textContent = "Finding location...";
 
     navigator.geolocation.getCurrentPosition(
+
+      // SUCCESS
       position => {
         userLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
 
-        map.setView(
-          [userLocation.lat, userLocation.lng],
-          13
-        );
+        // Remove previous GPS marker
+        if (userMarker) {
+          map.removeLayer(userMarker);
+        }
 
+        if (accuracyCircle) {
+          map.removeLayer(accuracyCircle);
+        }
+
+        // Create current location marker
+        userMarker = L.marker([
+          userLocation.lat,
+          userLocation.lng
+        ]).addTo(map);
+
+        userMarker.bindPopup(
+          "<b>📍 Your Current Location</b>"
+        ).openPopup();
+
+        // Add GPS accuracy circle
+        accuracyCircle = L.circle([
+          userLocation.lat,
+          userLocation.lng
+        ], {
+          radius: position.coords.accuracy,
+          color: "#0077cc",
+          fillColor: "#3399ff",
+          fillOpacity: 0.15
+        }).addTo(map);
+
+        // Zoom into current location
+        map.setView([
+          userLocation.lat,
+          userLocation.lng
+        ], 15);
+
+        // Recalculate distances
         displayWaterPoints();
 
         locationButton.textContent = "📍 Location Found";
         locationButton.disabled = false;
 
-        alert("Location found! Distances have been calculated.");
+        alert("Your location is now displayed on the map!");
       },
 
+      // ERROR
       error => {
         locationButton.textContent = "📍 Find My Location";
         locationButton.disabled = false;
 
-        alert("GPS error: " + error.message);
+        let message = "Unable to get your location.";
+
+        if (error.code === 1) {
+          message = "Location permission denied. Allow location access in your browser settings.";
+        } else if (error.code === 2) {
+          message = "Location unavailable. Check your device location settings and try again.";
+        } else if (error.code === 3) {
+          message = "Location request timed out. Please try again.";
+        }
+
+        alert(message);
+        console.error("GPS error:", error);
       },
 
       {
         enableHighAccuracy: true,
-        timeout: 15000,
+        timeout: 20000,
         maximumAge: 0
       }
     );
   });
 }
 
-// 7. COMPLAINT HISTORY
+// 8. SHOW COMPLAINT HISTORY
 function showComplaints() {
   const history = document.getElementById("complaintHistory");
 
@@ -245,7 +296,7 @@ function showComplaints() {
       localStorage.getItem("aquafindComplaints") || "[]"
     );
   } catch (error) {
-    console.error("Could not read complaint history:", error);
+    console.error("Complaint history error:", error);
   }
 
   history.innerHTML = "";
@@ -276,7 +327,7 @@ function showComplaints() {
   });
 }
 
-// 8. SUBMIT COMPLAINT
+// 9. COMPLAINT FORM
 function setupComplaintForm() {
   const form = document.getElementById("complaintForm");
 
@@ -287,7 +338,8 @@ function setupComplaintForm() {
 
     const name = document.getElementById("personName").value.trim();
     const problem = document.getElementById("problemType").value;
-    const description = document.getElementById("problemDescription").value.trim();
+    const description =
+      document.getElementById("problemDescription").value.trim();
 
     if (!name || !problem || !description) {
       alert("Please complete all fields.");
@@ -328,7 +380,7 @@ function setupComplaintForm() {
   });
 }
 
-// 9. START AQUAFIND
+// 10. START AQUAFIND ONLY ONCE
 document.addEventListener("DOMContentLoaded", () => {
   initializeMap();
   setupSearch();
