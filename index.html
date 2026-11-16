@@ -2,471 +2,479 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AquaFind | Smart Water Locator</title>
+    <title>AquaFind | Smart Drinking Water Locator</title>
 
-  <meta name="description"
-    content="AquaFind - Smart Drinking Water Locator System">
+    <meta name="description" content="AquaFind helps users locate listed drinking water points and submit complaints.">
+    <meta name="theme-color" content="#0877bd">
 
-  <!-- Leaflet Map CSS -->
-  <link rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <!-- PWA SETTINGS -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
 
-  <!-- Website CSS -->
-  <link rel="stylesheet" href="./style.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="./style.css">
 
-  <style>
-    /* 3D HERO SECTION */
-    .hero-3d {
-      position: relative;
-      overflow: hidden;
-      text-align: center;
-      padding: 65px 20px;
-      margin: 25px 0;
-      border-radius: 28px;
-      color: white;
-      background: linear-gradient(135deg, #0077d9, #003b82);
-      box-shadow: 0 20px 40px rgba(0, 65, 140, .25);
-    }
+    <!-- LEAFLET MAP CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
 
-    .hero-3d::before,
-    .hero-3d::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255,255,255,.08);
-      pointer-events: none;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    .hero-3d::before {
-      width: 250px;
-      height: 250px;
-      top: -100px;
-      left: -70px;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .hero-3d::after {
-      width: 190px;
-      height: 190px;
-      right: -50px;
-      bottom: -90px;
-    }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f7fc;
+            color: #243447;
+        }
 
-    .hero-content {
-      position: relative;
-      z-index: 1;
-    }
+        .hero-3d {
+            padding: 55px 20px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #075985, #0284c7, #38bdf8);
+            border-radius: 0 0 35px 35px;
+            box-shadow: 0 12px 30px rgba(0, 90, 150, 0.25);
+        }
 
-    .hero-drop {
-      font-size: 65px;
-      display: inline-block;
-      filter: drop-shadow(0 12px 10px rgba(0,0,0,.25));
-      animation: floatDrop 3s ease-in-out infinite;
-    }
+        .hero-drop {
+            font-size: 65px;
+            animation: float 3s ease-in-out infinite;
+        }
 
-    @keyframes floatDrop {
-      0%, 100% { transform: translateY(0) rotate(-5deg); }
-      50% { transform: translateY(-12px) rotate(5deg); }
-    }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
 
-    .hero-3d h1 {
-      font-size: clamp(30px, 5vw, 48px);
-      margin: 12px 0;
-      text-shadow: 0 5px 15px rgba(0,0,0,.25);
-    }
+        .hero-3d h1 {
+            font-size: 42px;
+            margin: 10px 0;
+        }
 
-    .hero-3d p {
-      max-width: 650px;
-      margin: 10px auto;
-      color: #e6f5ff;
-    }
+        .hero-3d p {
+            font-size: 17px;
+            max-width: 600px;
+            margin: 10px auto 20px;
+            line-height: 1.6;
+        }
 
-    .hero-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 13px 25px;
-      color: #0054a6;
-      background: white;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 14px;
-      box-shadow: 0 7px 0 #b9d8f2;
-      transition: .2s;
-    }
+        .hero-button {
+            display: inline-block;
+            padding: 13px 25px;
+            background: white;
+            color: #075985;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.15);
+        }
 
-    .hero-button:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 11px 0 #b9d8f2;
-    }
+        .hero-button:hover {
+            transform: translateY(-3px);
+        }
 
-    /* FEATURE CARDS */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 18px;
-      margin: 25px 0;
-    }
+        .container {
+            max-width: 1100px;
+            padding: 20px;
+            margin: auto;
+        }
 
-    .feature-card {
-      padding: 22px;
-      text-align: center;
-      background: linear-gradient(145deg, #ffffff, #e7f5ff);
-      border: 1px solid #d4eaff;
-      border-radius: 20px;
-      box-shadow: 8px 8px 18px rgba(0,70,130,.12),
-                  -5px -5px 15px white;
-      transition: .3s;
-    }
+        .panel {
+            background: white;
+            padding: 22px;
+            margin: 25px 0;
+            border-radius: 18px;
+            box-shadow: 0 6px 22px rgba(0,0,0,.07);
+        }
 
-    .feature-card:hover {
-      transform: translateY(-7px);
-      box-shadow: 12px 15px 25px rgba(0,70,130,.18);
-    }
+        .section-heading {
+            color: #075985;
+            margin-top: 0;
+        }
 
-    .feature-icon {
-      font-size: 35px;
-      margin-bottom: 8px;
-    }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
 
-    .feature-card h3 {
-      color: #0057a9;
-      font-size: 17px;
-    }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,.06);
+        }
 
-    /* SECTION NAVIGATION */
-    .quick-nav {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 20px 0;
-    }
+        .feature-card .emoji {
+            font-size: 35px;
+        }
 
-    .quick-nav a {
-      text-decoration: none;
-      color: #07569c;
-      background: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,70,130,.1);
-    }
+        input, select, textarea {
+            width: 100%;
+            padding: 13px;
+            margin: 9px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+        }
 
-    .quick-nav a:hover {
-      background: #e0f3ff;
-    }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 9px;
+            background: #0877bd;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px 3px;
+        }
 
-    .admin-link {
-      display: inline-block;
-      text-decoration: none;
-      color: white;
-      background: rgba(255,255,255,.15);
-      padding: 10px 18px;
-      border: 1px solid rgba(255,255,255,.4);
-      border-radius: 12px;
-    }
+        button:hover {
+            background: #075985;
+        }
 
-    .admin-link:hover {
-      background: white;
-      color: #0055aa;
-    }
+        #map {
+            height: 430px;
+            width: 100%;
+            border-radius: 14px;
+            z-index: 1;
+        }
 
-    .section-space {
-      scroll-margin-top: 20px;
-    }
+        .water-card, .complaint-card {
+            background: #f8fbff;
+            border: 1px solid #dbeafe;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
 
-    .site-footer {
-      text-align: center;
-      padding: 30px 15px;
-      background: linear-gradient(135deg, #003b80, #0066cc);
-      color: white;
-      margin-top: 40px;
-    }
+        .water-card h3 {
+            color: #075985;
+            margin-top: 0;
+        }
 
-    .demo-warning {
-      padding: 13px;
-      margin-top: 15px;
-      border-radius: 12px;
-      background: #fff5dc;
-      color: #805500;
-      font-size: 13px;
-    }
+        .demo-warning {
+            background: #fff7ed;
+            color: #9a3412;
+            padding: 13px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
 
-    @media(max-width: 600px) {
-      .hero-3d {
-        padding: 45px 16px;
-      }
+        .admin-link {
+            display: inline-block;
+            color: white;
+            background: #075985;
+            padding: 12px 18px;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-      .hero-drop {
-        font-size: 50px;
-      }
+        footer {
+            text-align: center;
+            background: #075985;
+            color: white;
+            padding: 25px 15px;
+            margin-top: 40px;
+        }
 
-      .quick-nav a {
-        font-size: 13px;
-      }
-    }
+        #installBtn {
+            display: none;
+        }
 
-    @media(prefers-reduced-motion: reduce) {
-      .hero-drop {
-        animation: none;
-      }
+        @media(max-width: 600px) {
+            .hero-3d h1 {
+                font-size: 32px;
+            }
 
-      * {
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
-    }
-  </style>
+            .hero-3d {
+                padding: 40px 15px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
+            #map {
+                height: 350px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="main-header">
-    <div class="header-content">
-      <div class="logo">💧 AquaFind</div>
+    <!-- HEADER -->
+    <header class="main-header">
+        <div class="header-content">
+            <h2>💧 AquaFind</h2>
+            <p>Smart Drinking Water Locator</p>
+        </div>
+    </header>
 
-      <p class="header-tagline">
-        Smart Drinking Water Locator System
-      </p>
-
-      <a href="./admin.html" class="admin-link">
-        ⚙ Admin Dashboard
-      </a>
-    </div>
-  </header>
-
-  <main class="container">
-
-    <!-- 3D HERO -->
+    <!-- HERO -->
     <section class="hero-3d">
-      <div class="hero-content">
 
         <div class="hero-drop">💧</div>
 
-        <h1>Find Water. Find Convenience.</h1>
+        <h1>Welcome to AquaFind</h1>
 
         <p>
-          Discover listed water points near your location
-          using GPS, interactive maps and smart distance calculation.
+            Find listed drinking water points near you.
+            Locate water points and report problems through one platform.
         </p>
 
-        <a href="#search-section" class="hero-button">
-          Explore Water Points →
+        <a href="#locator" class="hero-button">
+            Find Water
         </a>
 
-      </div>
-    </section>
+        <a href="#complaints" class="hero-button">
+            Report Problem
+        </a>
 
-    <!-- QUICK NAVIGATION -->
-    <nav class="quick-nav">
-      <a href="#search-section">Search</a>
-      <a href="#map-section">Map</a>
-      <a href="#water-section">Water Points</a>
-      <a href="#complaint-section">Report Problem</a>
-      <a href="#history-section">History</a>
-    </nav>
+        <br>
 
-    <!-- FEATURES -->
-    <section class="feature-grid">
-
-      <div class="feature-card">
-        <div class="feature-icon">📍</div>
-        <h3>GPS Location</h3>
-        <p>Find your current location.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🗺️</div>
-        <h3>Smart Map</h3>
-        <p>Explore listed water points.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📏</div>
-        <h3>Distance</h3>
-        <p>Calculate approximate distance.</p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📝</div>
-        <h3>Report Issues</h3>
-        <p>Submit water-related complaints.</p>
-      </div>
-
-    </section>
-
-    <!-- SEARCH -->
-    <section id="search-section"
-      class="panel search-section section-space">
-
-      <h2 class="section-heading">
-        🔍 Search Water Points
-      </h2>
-
-      <input
-        type="search"
-        id="searchInput"
-        placeholder="Search by name or area..."
-        aria-label="Search water points">
-
-      <button
-        type="button"
-        id="locationBtn"
-        class="location-button">
-        📍 Find My Location
-      </button>
-
-      <p class="helper-text">
-        Allow location permission to calculate approximate distances.
-      </p>
-
-    </section>
-
-    <!-- MAP -->
-    <section id="map-section"
-      class="panel map-section section-space">
-
-      <h2 class="section-heading">
-        🌍 Interactive Water Point Map
-      </h2>
-
-      <div id="map"></div>
-
-      <div class="map-legend">
-        <p>🔵 Listed water point</p>
-        <p>📍 Your current location</p>
-      </div>
-
-      <div class="demo-warning">
-        Important: These are demo locations, not verified
-        drinking-water facilities. Please confirm availability
-        and water safety independently.
-      </div>
-
-    </section>
-
-    <!-- WATER POINTS -->
-    <section id="water-section"
-      class="panel water-section section-space">
-
-      <h2 class="section-heading">
-        💧 Listed Water Points
-      </h2>
-
-      <div id="waterList" class="water-list">
-        Loading water points...
-      </div>
-
-    </section>
-
-    <!-- COMPLAINT FORM -->
-    <section id="complaint-section"
-      class="panel complaint-section section-space">
-
-      <h2 class="section-heading">
-        📝 Report a Water Problem
-      </h2>
-
-      <p>
-        Help improve water-point maintenance by reporting problems.
-      </p>
-
-      <form id="complaintForm">
-
-        <label for="personName">Your Name</label>
-
-        <input
-          type="text"
-          id="personName"
-          placeholder="Enter your name"
-          required>
-
-        <label for="problemType">Problem Type</label>
-
-        <select id="problemType" required>
-          <option value="">Select a problem</option>
-          <option value="Water Not Available">Water Not Available</option>
-          <option value="Damaged Tap">Damaged Tap</option>
-          <option value="Dirty Water">Dirty Water</option>
-          <option value="Poor Maintenance">Poor Maintenance</option>
-          <option value="Other">Other</option>
-        </select>
-
-        <label for="problemDescription">
-          Describe the Problem
-        </label>
-
-        <textarea
-          id="problemDescription"
-          rows="4"
-          placeholder="Enter problem details..."
-          required></textarea>
-
-        <button type="submit" class="submit-button">
-          Submit Complaint →
+        <button id="installBtn">
+            📲 Install AquaFind App
         </button>
 
-      </form>
-
-      <p class="note">
-        Demo complaints are stored locally in this browser.
-        They are not automatically sent to a maintenance team.
-      </p>
-
     </section>
 
-    <!-- HISTORY -->
-    <section id="history-section"
-      class="panel history-section section-space">
+    <main class="container">
 
-      <h2 class="section-heading">
-        📋 Complaint History
-      </h2>
+        <!-- FEATURES -->
+        <section class="feature-grid">
 
-      <div id="complaintHistory">
-        No complaints submitted yet.
-      </div>
+            <div class="feature-card">
+                <div class="emoji">📍</div>
+                <h3>GPS Location</h3>
+                <p>Find your current location.</p>
+            </div>
 
-    </section>
+            <div class="feature-card">
+                <div class="emoji">🚰</div>
+                <h3>Water Locator</h3>
+                <p>Explore listed water points.</p>
+            </div>
 
-    <!-- ABOUT -->
-    <section class="panel about-section">
+            <div class="feature-card">
+                <div class="emoji">📢</div>
+                <h3>Complaints</h3>
+                <p>Report water point problems.</p>
+            </div>
 
-      <h2 class="section-heading">
-        About AquaFind
-      </h2>
+        </section>
 
-      <p>
-        AquaFind is a Design Thinking project focused on helping
-        people locate listed drinking-water points more conveniently.
-      </p>
+        <!-- WATER LOCATOR -->
+        <section class="panel" id="locator">
 
-      <p>
-        It uses GPS, interactive maps, distance calculation
-        and complaint reporting to demonstrate a smart locator system.
-      </p>
+            <h2 class="section-heading">
+                📍 Find Drinking Water
+            </h2>
 
-    </section>
+            <p>
+                Search for a listed water point or use your current location.
+            </p>
 
-  </main>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by water point or area..."
+            >
 
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <h2>💧 AquaFind</h2>
-    <p>Smart Drinking Water Locator System</p>
-    <p>Design Thinking Project | 2026</p>
-  </footer>
+            <button id="locationBtn">
+                📍 Use My Location
+            </button>
 
-  <!-- Leaflet Library: Load Before script.js -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
+            <div class="demo-warning">
+                ⚠️ Water points shown are demonstration listings.
+                Their availability and water safety have not been verified.
+            </div>
 
-  <!-- Your Existing JavaScript -->
-  <script src="./script.js"></script>
+            <h3>Water Points Map</h3>
+
+            <div id="map"></div>
+
+            <h3>Available Listings</h3>
+
+            <div id="waterList">
+                Loading water points...
+            </div>
+
+        </section>
+
+        <!-- COMPLAINT FORM -->
+        <section class="panel" id="complaints">
+
+            <h2 class="section-heading">
+                📢 Report a Water Problem
+            </h2>
+
+            <form id="complaintForm">
+
+                <label for="personName">Your Name</label>
+
+                <input
+                    type="text"
+                    id="personName"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <label for="problemType">Problem Type</label>
+
+                <select id="problemType" required>
+                    <option value="">Select a problem</option>
+                    <option value="Water Not Available">
+                        Water Not Available
+                    </option>
+                    <option value="Dirty Water">
+                        Dirty Water
+                    </option>
+                    <option value="Broken Tap">
+                        Broken Tap
+                    </option>
+                    <option value="Maintenance Required">
+                        Maintenance Required
+                    </option>
+                    <option value="Other">
+                        Other
+                    </option>
+                </select>
+
+                <label for="problemDescription">
+                    Describe the Problem
+                </label>
+
+                <textarea
+                    id="problemDescription"
+                    rows="4"
+                    placeholder="Explain the problem..."
+                    required
+                ></textarea>
+
+                <button type="submit">
+                    Submit Complaint
+                </button>
+
+            </form>
+
+            <h3>My Complaint History</h3>
+
+            <div id="complaintHistory">
+                No complaints submitted yet.
+            </div>
+
+        </section>
+
+        <!-- ADMIN -->
+        <section class="panel">
+
+            <h2 class="section-heading">
+                ⚙️ Administration
+            </h2>
+
+            <p>
+                Open the AquaFind complaint dashboard.
+            </p>
+
+            <a href="./admin.html" class="admin-link">
+                Open Admin Dashboard
+            </a>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <h3>💧 AquaFind</h3>
+        <p>Smart Drinking Water Locator System</p>
+        <p>Design Thinking Project</p>
+        <p>© 2026 AquaFind</p>
+    </footer>
+
+    <!-- LEAFLET MAP JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- MAIN JAVASCRIPT -->
+    <script src="./script.js"></script>
+
+    <!-- PWA SERVICE WORKER -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("./service-worker.js")
+                    .then(function (registration) {
+                        console.log(
+                            "AquaFind PWA registered:",
+                            registration.scope
+                        );
+                    })
+                    .catch(function (error) {
+                        console.error(
+                            "AquaFind PWA registration failed:",
+                            error
+                        );
+                    });
+            });
+        }
+
+        // INSTALL APP BUTTON
+        let deferredInstallPrompt;
+
+        const installButton = document.getElementById("installBtn");
+
+        window.addEventListener("beforeinstallprompt", function (event) {
+            event.preventDefault();
+
+            deferredInstallPrompt = event;
+            installButton.style.display = "inline-block";
+        });
+
+        installButton.addEventListener("click", async function () {
+            if (!deferredInstallPrompt) {
+                alert(
+                    "To install AquaFind, open Chrome menu and select Add to Home screen."
+                );
+                return;
+            }
+
+            deferredInstallPrompt.prompt();
+
+            await deferredInstallPrompt.userChoice;
+
+            deferredInstallPrompt = null;
+            installButton.style.display = "none";
+        });
+
+        window.addEventListener("appinstalled", function () {
+            installButton.style.display = "none";
+            console.log("AquaFind installed successfully.");
+        });
+    </script>
 
 </body>
 </html>
