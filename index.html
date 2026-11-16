@@ -4,130 +4,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>AquaFind - Smart Water Locator</title>
+  <title>AquaFind - Smart Drinking Water Locator</title>
 
   <meta name="theme-color" content="#0877bd">
-  <meta name="description" content="AquaFind Smart Drinking Water Locator">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AquaFind">
 
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icons/icon-192.png">
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-
   <link rel="stylesheet" href="./style.css">
 
-  <link rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
 </head>
 
 <body>
 
   <header class="main-header">
     <div class="header-content">
-      <h2>💧 AquaFind</h2>
-      <p>Smart Drinking Water Locator</p>
+      <div class="logo">💧 AquaFind</div>
+      <p class="header-tagline">
+        Smart Drinking Water Locator System
+      </p>
+      <a class="admin-link" href="./admin.html">
+        Admin Dashboard
+      </a>
     </div>
   </header>
 
-  <section class="hero-3d">
-    <div class="hero-drop">💧</div>
-    <h1>Welcome to AquaFind</h1>
-    <p>Find listed drinking water points near you.</p>
-    <a href="#locator" class="hero-button">Find Water</a>
-    <a href="#complaints" class="hero-button">Report Problem</a>
-    <button id="installBtn" style="display:none">
-      Install AquaFind
-    </button>
-  </section>
-
   <main class="container">
 
-    <section class="feature-grid">
-      <div class="feature-card">
-        <h2>📍</h2>
-        <h3>GPS Location</h3>
-        <p>Find your current location.</p>
-      </div>
-
-      <div class="feature-card">
-        <h2>🚰</h2>
-        <h3>Water Locator</h3>
-        <p>Explore listed water points.</p>
-      </div>
-
-      <div class="feature-card">
-        <h2>📢</h2>
-        <h3>Complaints</h3>
-        <p>Report water point problems.</p>
-      </div>
-    </section>
-
-    <section class="panel" id="locator">
-      <h2 class="section-heading">📍 Find Drinking Water</h2>
-
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search water point or area">
-
-      <button id="locationBtn">📍 Use My Location</button>
-
-      <p class="demo-warning">
-        Demo listings only. Water availability and safety
-        have not been independently verified.
+    <section class="welcome-section">
+      <h1>Find Drinking Water Near You</h1>
+      <p>
+        Locate listed water points, check approximate distances
+        and report maintenance problems.
       </p>
-
-      <h3>Water Points Map</h3>
-      <div id="map"></div>
-
-      <h3>Water Point Listings</h3>
-      <div id="waterList">Loading water points...</div>
     </section>
 
-    <section class="panel" id="complaints">
-      <h2 class="section-heading">📢 Report a Problem</h2>
-
-      <form id="complaintForm">
-        <label for="personName">Your Name</label>
-        <input id="personName" type="text"
-          placeholder="Enter your name" required>
-
-        <label for="problemType">Problem Type</label>
-        <select id="problemType" required>
-          <option value="">Select a problem</option>
-          <option>Water Not Available</option>
-          <option>Dirty Water</option>
-          <option>Broken Tap</option>
-          <option>Maintenance Required</option>
-          <option>Other</option>
-        </select>
-
-        <label for="problemDescription">Description</label>
-        <textarea id="problemDescription"
-          placeholder="Describe the problem"
-          rows="4" required></textarea>
-
-        <button type="submit">Submit Complaint</button>
-      </form>
-
-      <h3>My Complaint History</h3>
-      <div id="complaintHistory">
-        No complaints submitted yet.
+    <section class="hero-3d">
+      <div class="hero-content">
+        <div class="hero-drop">💧</div>
+        <h1>Find Water. Stay Hydrated.</h1>
+        <p>
+          AquaFind helps users explore demonstration water-point
+          listings around their area.
+        </p>
       </div>
     </section>
 
     <section class="panel">
-      <h2 class="section-heading">Administration</h2>
-      <a href="./admin.html" class="admin-link">
-        Open Admin Dashboard
-      </a>
+      <h2 class="section-heading">🔎 Search Water Points</h2>
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search by area or water point..."
+        aria-label="Search water points"
+      >
+
+      <button type="button" id="locationBtn">
+        📍 Find My Location
+      </button>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-heading">🗺️ Water Point Map</h2>
+      <div
+        id="map"
+        style="height: 400px; width: 100%; border-radius: 15px;"
+      ></div>
+      <p>
+        Note: Map markers are demonstration listings and are
+        not verified drinking-water sources.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-heading">💧 Available Listings</h2>
+      <div id="waterList"></div>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-heading">🛠️ Report a Water Problem</h2>
+
+      <form id="complaintForm">
+
+        <label for="personName">Your Name</label>
+        <input
+          type="text"
+          id="personName"
+          placeholder="Enter your name"
+          required
+        >
+
+        <label for="problemType">Problem Type</label>
+        <select id="problemType" required>
+          <option value="">Select a problem</option>
+          <option value="Water not available">Water not available</option>
+          <option value="Broken tap">Broken tap</option>
+          <option value="Dirty surroundings">Dirty surroundings</option>
+          <option value="Maintenance required">Maintenance required</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="problemDescription">Problem Description</label>
+        <textarea
+          id="problemDescription"
+          rows="4"
+          placeholder="Describe the problem..."
+          required
+        ></textarea>
+
+        <button type="submit">Submit Complaint</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2 class="section-heading">📋 Complaint History</h2>
+      <div id="complaintHistory"></div>
     </section>
 
   </main>
 
   <footer>
-    <h3>💧 AquaFind</h3>
-    <p>Smart Drinking Water Locator System</p>
+    <p>© 2026 AquaFind | Smart Drinking Water Locator</p>
     <p>Design Thinking Project</p>
   </footer>
 
@@ -136,9 +138,8 @@
 
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js")
-          .catch(error => console.error("PWA error:", error));
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js");
       });
     }
   </script>
