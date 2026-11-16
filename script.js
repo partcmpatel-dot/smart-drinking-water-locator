@@ -2,121 +2,27 @@
 // AQUAFIND - Smart Drinking Water Locator
 
 const waterPoints = [
-  
-const waterPoints = [
-  {
-    name: "Demo Water Point 1",
-    area: "Kharar Main Market",
-    lat: 30.7465,
-    lng: 76.6465,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 2",
-    area: "Kharar Bus Stand",
-    lat: 30.7445,
-    lng: 76.6475,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 3",
-    area: "Kharar Landran Road",
-    lat: 30.7395,
-    lng: 76.6550,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 4",
-    area: "Sunny Enclave, Kharar",
-    lat: 30.7215,
-    lng: 76.6450,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 5",
-    area: "Landran, Mohali",
-    lat: 30.6870,
-    lng: 76.6500,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 6",
-    area: "Airport Road, Mohali",
-    lat: 30.6750,
-    lng: 76.7350,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 7",
-    area: "Phase 3B2, Mohali",
-    lat: 30.7100,
-    lng: 76.7180,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 8",
-    area: "Phase 7, Mohali",
-    lat: 30.7050,
-    lng: 76.7080,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 9",
-    area: "Sector 17, Chandigarh",
-    lat: 30.7415,
-    lng: 76.7820,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 10",
-    area: "Sector 22, Chandigarh",
-    lat: 30.7330,
-    lng: 76.7720,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 11",
-    area: "Sector 35, Chandigarh",
-    lat: 30.7190,
-    lng: 76.7510,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 12",
-    area: "Sector 15, Chandigarh",
-    lat: 30.7590,
-    lng: 76.7680,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 13",
-    area: "Sector 43, Chandigarh",
-    lat: 30.7140,
-    lng: 76.7560,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 14",
-    area: "Sector 34, Chandigarh",
-    lat: 30.7250,
-    lng: 76.7620,
-    status: "Demo listing"
-  },
-  {
-    name: "Demo Water Point 15",
-    area: "Sector 26, Chandigarh",
-    lat: 30.7270,
-    lng: 76.8010,
-    status: "Demo listing"
-  }
-];
-
+  { name: "Demo Water Point 1", area: "Kharar Main Market", lat: 30.7465, lng: 76.6465, status: "Demo listing" },
+  { name: "Demo Water Point 2", area: "Kharar Bus Stand", lat: 30.7445, lng: 76.6475, status: "Demo listing" },
+  { name: "Demo Water Point 3", area: "Kharar Landran Road", lat: 30.7395, lng: 76.6550, status: "Demo listing" },
+  { name: "Demo Water Point 4", area: "Sunny Enclave, Kharar", lat: 30.7215, lng: 76.6450, status: "Demo listing" },
+  { name: "Demo Water Point 5", area: "Landran, Mohali", lat: 30.6870, lng: 76.6500, status: "Demo listing" },
+  { name: "Demo Water Point 6", area: "Airport Road, Mohali", lat: 30.6750, lng: 76.7350, status: "Demo listing" },
+  { name: "Demo Water Point 7", area: "Phase 3B2, Mohali", lat: 30.7100, lng: 76.7180, status: "Demo listing" },
+  { name: "Demo Water Point 8", area: "Phase 7, Mohali", lat: 30.7050, lng: 76.7080, status: "Demo listing" },
+  { name: "Demo Water Point 9", area: "Sector 17, Chandigarh", lat: 30.7415, lng: 76.7820, status: "Demo listing" },
+  { name: "Demo Water Point 10", area: "Sector 22, Chandigarh", lat: 30.7330, lng: 76.7720, status: "Demo listing" },
+  { name: "Demo Water Point 11", area: "Sector 35, Chandigarh", lat: 30.7190, lng: 76.7510, status: "Demo listing" },
+  { name: "Demo Water Point 12", area: "Sector 15, Chandigarh", lat: 30.7590, lng: 76.7680, status: "Demo listing" },
+  { name: "Demo Water Point 13", area: "Sector 43, Chandigarh", lat: 30.7140, lng: 76.7560, status: "Demo listing" },
+  { name: "Demo Water Point 14", area: "Sector 34, Chandigarh", lat: 30.7250, lng: 76.7620, status: "Demo listing" },
+  { name: "Demo Water Point 15", area: "Sector 26, Chandigarh", lat: 30.7270, lng: 76.8010, status: "Demo listing" }
 ];
 
 let userLocation = null;
 let searchText = "";
 
-const map = L.map("map").setView([30.7333, 76.7794], 13);
+const map = L.map("map").setView([30.7333, 76.7794], 11);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: '&copy; OpenStreetMap contributors'
@@ -124,7 +30,7 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const markerLayer = L.layerGroup().addTo(map);
 
-// Calculate distance between two locations
+// Distance calculation in kilometres
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371;
   const toRad = value => value * Math.PI / 180;
@@ -155,12 +61,8 @@ function displayWaterPoints() {
 
   if (userLocation) {
     filtered.sort((a, b) =>
-      calculateDistance(
-        userLocation.lat, userLocation.lng, a.lat, a.lng
-      ) -
-      calculateDistance(
-        userLocation.lat, userLocation.lng, b.lat, b.lng
-      )
+      calculateDistance(userLocation.lat, userLocation.lng, a.lat, a.lng) -
+      calculateDistance(userLocation.lat, userLocation.lng, b.lat, b.lng)
     );
   }
 
@@ -192,22 +94,16 @@ function displayWaterPoints() {
 
     if (userLocation) {
       const distance = calculateDistance(
-        userLocation.lat,
-        userLocation.lng,
-        point.lat,
-        point.lng
+        userLocation.lat, userLocation.lng, point.lat, point.lng
       );
 
       const distanceText = document.createElement("p");
-      distanceText.textContent =
-        "📏 Distance: " + distance.toFixed(2) + " km";
-
+      distanceText.textContent = "📏 Distance: " + distance.toFixed(2) + " km";
       card.appendChild(distanceText);
     }
 
     const mapButton = document.createElement("button");
     mapButton.textContent = "View on Map";
-
     mapButton.addEventListener("click", () => {
       map.setView([point.lat, point.lng], 16);
       marker.openPopup();
@@ -216,13 +112,9 @@ function displayWaterPoints() {
     const directionButton = document.createElement("button");
     directionButton.textContent = "Get Directions";
     directionButton.style.marginLeft = "8px";
-
     directionButton.addEventListener("click", () => {
-      const destination = `${point.lat},${point.lng}`;
-      const url =
-        "https://www.google.com/maps/dir/?api=1&destination=" +
-        encodeURIComponent(destination);
-
+      const url = "https://www.google.com/maps/dir/?api=1&destination=" +
+        encodeURIComponent(`${point.lat},${point.lng}`);
       window.open(url, "_blank");
     });
 
@@ -237,8 +129,7 @@ document.getElementById("searchInput").addEventListener("input", event => {
   displayWaterPoints();
 });
 
-
-// Find current location
+// GPS
 document.getElementById("locationBtn").addEventListener("click", () => {
   const button = document.getElementById("locationBtn");
 
@@ -247,7 +138,7 @@ document.getElementById("locationBtn").addEventListener("click", () => {
     return;
   }
 
-  button.textContent = "Finding your location...";
+  button.textContent = "Finding location...";
 
   navigator.geolocation.getCurrentPosition(
     position => {
@@ -256,65 +147,18 @@ document.getElementById("locationBtn").addEventListener("click", () => {
         lng: position.coords.longitude
       };
 
-      // Show your current location on the map
-      map.setView(
-        [userLocation.lat, userLocation.lng],
-        14
-      );
+      map.setView([userLocation.lat, userLocation.lng], 13);
 
-      L.marker([userLocation.lat, userLocation.lng])
-        .addTo(map)
-        .bindPopup("Your current location")
-        .openPopup();
-
-      // Refresh cards and calculate distances
       displayWaterPoints();
 
+      alert("Location found! Distances have been calculated.");
       button.textContent = "📍 Location Found";
-
-      alert("Location found! Check the distances in the water-point cards.");
     },
-
     error => {
       button.textContent = "📍 Find My Location";
-      alert("Unable to find location. Please try again.");
+      alert("GPS error: " + error.message);
     },
-
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
-    }
-  );
-});
-
-  if (!navigator.geolocation) {
-    alert("Location is not supported by this browser.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    position => {
-      userLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-
-      map.setView([userLocation.lat, userLocation.lng], 14);
-
-      L.marker([userLocation.lat, userLocation.lng])
-        .addTo(map)
-        .bindPopup("Your current location")
-        .openPopup();
-
-      displayWaterPoints();
-
-      alert("Your location found! Water points are now sorted by distance.");
-    },
-    error => {
-      alert("Location access failed. Please allow GPS permission and try again.");
-    },
-    { enableHighAccuracy: true, timeout: 10000 }
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
   );
 });
 
@@ -359,8 +203,7 @@ document.getElementById("complaintForm").addEventListener("submit", event => {
 
   const name = document.getElementById("personName").value.trim();
   const problem = document.getElementById("problemType").value;
-  const description =
-    document.getElementById("problemDescription").value.trim();
+  const description = document.getElementById("problemDescription").value.trim();
 
   if (!name || !problem || !description) {
     alert("Please complete all fields.");
@@ -386,6 +229,6 @@ document.getElementById("complaintForm").addEventListener("submit", event => {
   showComplaints();
 });
 
-// Initial display
+// Initial loading
 displayWaterPoints();
 showComplaints();
