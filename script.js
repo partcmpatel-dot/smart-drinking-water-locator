@@ -1,7 +1,6 @@
 
-// AquaFind - Smart Drinking Water Locator
+// AQUAFIND - Smart Drinking Water Locator
 
-// Demo water points (not verified real facilities)
 const waterPoints = [
   {
     name: "Demo Water Point 1",
@@ -26,7 +25,9 @@ const waterPoints = [
   }
 ];
 
-// Create map
+let userLocation = null;
+let searchText = "";
+
 const map = L.map("map").setView([30.7333, 76.7794], 13);
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -35,19 +36,52 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 const markerLayer = L.layerGroup().addTo(map);
 
+// Calculate distance between two locations
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const toRad = value => value * Math.PI / 180;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) *
+    Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
+
+  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 // Display water points
-function displayWaterPoints(points) {
+function displayWaterPoints() {
   markerLayer.clearLayers();
 
   const list = document.getElementById("waterList");
   list.innerHTML = "";
 
-  if (points.length === 0) {
+  let filtered = waterPoints.filter(point =>
+    point.name.toLowerCase().includes(searchText) ||
+    point.area.toLowerCase().includes(searchText)
+  );
+
+  if (userLocation) {
+    filtered.sort((a, b) =>
+      calculateDistance(
+        userLocation.lat, userLocation.lng, a.lat, a.lng
+      ) -
+      calculateDistance(
+        userLocation.lat, userLocation.lng, b.lat, b.lng
+      )
+    );
+  }
+
+  if (filtered.length === 0) {
     list.textContent = "No matching demo water points found.";
     return;
   }
 
-  points.forEach(point => {
+  filtered.forEach(point => {
     const marker = L.marker([point.lat, point.lng])
       .addTo(markerLayer)
       .bindPopup(
@@ -61,35 +95,58 @@ function displayWaterPoints(points) {
     title.textContent = "💧 " + point.name;
 
     const area = document.createElement("p");
-    area.textContent = point.area;
+    area.textContent = "📍 " + point.area;
 
     const status = document.createElement("p");
-    status.textContent = point.status;
+    status.textContent = "Status: " + point.status;
 
-    const button = document.createElement("button");
-    button.textContent = "View on Map";
-    button.addEventListener("click", () => {
+    card.append(title, area, status);
+
+    if (userLocation) {
+      const distance = calculateDistance(
+        userLocation.lat,
+        userLocation.lng,
+        point.lat,
+        point.lng
+      );
+
+      const distanceText = document.createElement("p");
+      distanceText.textContent =
+        "📏 Distance: " + distance.toFixed(2) + " km";
+
+      card.appendChild(distanceText);
+    }
+
+    const mapButton = document.createElement("button");
+    mapButton.textContent = "View on Map";
+
+    mapButton.addEventListener("click", () => {
       map.setView([point.lat, point.lng], 16);
       marker.openPopup();
     });
 
-    card.append(title, area, status, button);
+    const directionButton = document.createElement("button");
+    directionButton.textContent = "Get Directions";
+    directionButton.style.marginLeft = "8px";
+
+    directionButton.addEventListener("click", () => {
+      const destination = `${point.lat},${point.lng}`;
+      const url =
+        "https://www.google.com/maps/dir/?api=1&destination=" +
+        encodeURIComponent(destination);
+
+      window.open(url, "_blank");
+    });
+
+    card.append(mapButton, directionButton);
     list.appendChild(card);
   });
 }
 
-displayWaterPoints(waterPoints);
-
-// Search water points
+// Search
 document.getElementById("searchInput").addEventListener("input", event => {
-  const search = event.target.value.toLowerCase();
-
-  const filtered = waterPoints.filter(point =>
-    point.name.toLowerCase().includes(search) ||
-    point.area.toLowerCase().includes(search)
-  );
-
-  displayWaterPoints(filtered);
+  searchText = event.target.value.toLowerCase();
+  displayWaterPoints();
 });
 
 // Find current location
@@ -101,23 +158,30 @@ document.getElementById("locationBtn").addEventListener("click", () => {
 
   navigator.geolocation.getCurrentPosition(
     position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+      userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
 
-      map.setView([lat, lng], 16);
+      map.setView([userLocation.lat, userLocation.lng], 14);
 
-      L.marker([lat, lng])
+      L.marker([userLocation.lat, userLocation.lng])
         .addTo(map)
         .bindPopup("Your current location")
         .openPopup();
+
+      displayWaterPoints();
+
+      alert("Your location found! Water points are now sorted by distance.");
     },
-    () => {
-      alert("Could not access your location. Please allow location permission.");
-    }
+    error => {
+      alert("Location access failed. Please allow GPS permission and try again.");
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
   );
 });
 
-// Load complaint history
+// Complaint history
 function showComplaints() {
   const complaints = JSON.parse(
     localStorage.getItem("aquafindComplaints") || "[]"
@@ -158,7 +222,8 @@ document.getElementById("complaintForm").addEventListener("submit", event => {
 
   const name = document.getElementById("personName").value.trim();
   const problem = document.getElementById("problemType").value;
-  const description = document.getElementById("problemDescription").value.trim();
+  const description =
+    document.getElementById("problemDescription").value.trim();
 
   if (!name || !problem || !description) {
     alert("Please complete all fields.");
@@ -184,5 +249,6 @@ document.getElementById("complaintForm").addEventListener("submit", event => {
   showComplaints();
 });
 
-// Show saved complaints when app opens
+// Initial display
+displayWaterPoints();
 showComplaints();
