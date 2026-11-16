@@ -81,7 +81,12 @@ body {
 }
 
 /* COMMON PANELS */
-.panel {
+.panel,
+.map-section,
+.water-section,
+.search-section,
+.complaint-section,
+.history-section {
     background: white;
     padding: 25px;
     margin-bottom: 25px;
@@ -110,9 +115,14 @@ body {
     flex-shrink: 0;
 }
 
-.section-heading h2 {
+.section-heading h2,
+.map-section h2,
+.water-section h2,
+.complaint-section h2,
+.history-section h2 {
     color: #075b9b;
     font-size: 21px;
+    margin-bottom: 15px;
 }
 
 .section-heading p {
@@ -182,13 +192,24 @@ button:disabled {
     transform: none;
 }
 
-/* GPS BUTTON */
+/* SEARCH SECTION */
+.search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.search-section input {
+    margin-bottom: 0;
+}
+
+.search-section button,
 .location-button {
     width: 100%;
     background: #00a878;
-    margin-top: 2px;
 }
 
+.search-section button:hover,
 .location-button:hover {
     background: #00845d;
 }
@@ -212,7 +233,6 @@ button:disabled {
     background: #e7f0f5;
 }
 
-/* MAP LEGEND */
 .map-legend {
     display: flex;
     flex-wrap: wrap;
@@ -222,14 +242,16 @@ button:disabled {
     font-size: 13px;
 }
 
-.note {
+.note,
+.map-note {
     color: #8493a2;
     font-size: 12px;
     margin-top: 10px;
 }
 
 /* WATER POINT LIST */
-.water-list {
+.water-list,
+#waterList {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 18px;
@@ -275,13 +297,15 @@ button:disabled {
     flex-direction: column;
 }
 
-.submit-button {
+.submit-button,
+.complaint-section button {
     width: 100%;
     background: #0077c8;
     margin-top: 5px;
 }
 
-.submit-button:hover {
+.submit-button:hover,
+.complaint-section button:hover {
     background: #005fa5;
 }
 
@@ -318,7 +342,8 @@ button:disabled {
 }
 
 /* PROJECT INFORMATION */
-.project-info {
+.project-info,
+.about-section {
     background: #e5f5ff;
     border-left: 5px solid #008fca;
     padding: 23px;
@@ -326,15 +351,38 @@ button:disabled {
     margin-bottom: 25px;
 }
 
-.project-info h2 {
+.project-info h2,
+.about-section h2 {
     color: #075b9b;
     margin-bottom: 9px;
     font-size: 20px;
 }
 
-.project-info p {
+.project-info p,
+.about-section p {
     color: #526a7e;
     font-size: 14px;
+    margin-bottom: 8px;
+}
+
+/* ADMIN DASHBOARD LINK */
+.admin-link-section {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.admin-link-section a {
+    display: inline-block;
+    background: #075b9b;
+    color: white;
+    padding: 13px 22px;
+    text-decoration: none;
+    border-radius: 9px;
+    font-weight: bold;
+}
+
+.admin-link-section a:hover {
+    background: #004477;
 }
 
 /* FOOTER */
@@ -355,6 +403,14 @@ footer p {
     font-size: 13px;
     color: #d4e7f5;
     margin-top: 4px;
+}
+
+/* LEAFLET GPS MARKER */
+.user-location-marker {
+    background: #0878d1;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 /* MOBILE RESPONSIVE */
@@ -389,12 +445,21 @@ footer p {
         font-size: 13px;
     }
 
-    .panel {
+    .panel,
+    .map-section,
+    .water-section,
+    .search-section,
+    .complaint-section,
+    .history-section {
         padding: 17px;
         margin-bottom: 18px;
     }
 
-    .section-heading h2 {
+    .section-heading h2,
+    .map-section h2,
+    .water-section h2,
+    .complaint-section h2,
+    .history-section h2 {
         font-size: 18px;
     }
 
@@ -410,6 +475,7 @@ footer p {
     }
 
     .water-list,
+    #waterList,
     #complaintHistory {
         grid-template-columns: 1fr;
     }
@@ -428,7 +494,8 @@ footer p {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible {
+textarea:focus-visible,
+a:focus-visible {
     outline: 3px solid rgba(0, 119, 200, 0.25);
     outline-offset: 2px;
 }
