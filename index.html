@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaFind - Water Locator</title>
+
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>💧 AquaFind</h1>
+    <p>Find drinking water points near you</p>
+  </header>
+
+  <main>
+    <section class="search-section">
+      <h2>Find Water Nearby</h2>
+      <input id="searchInput" type="text"
+        placeholder="Search water points...">
+      <button id="locationBtn">📍 Find My Location</button>
+    </section>
+
+    <section>
+      <h2>Water Point Map</h2>
+      <div id="map"></div>
+      <p class="note">
+        Demo locations only. Please verify water quality locally.
+      </p>
+    </section>
+
+    <section>
+      <h2>Water Points</h2>
+      <div id="waterList"></div>
+    </section>
+
+    <section class="complaint-section">
+      <h2>Report a Problem</h2>
+
+      <form id="complaintForm">
+        <input id="personName" type="text"
+          placeholder="Your name" required>
+
+        <select id="problemType" required>
+          <option value="">Select a problem</option>
+          <option>Broken tap</option>
+          <option>No water available</option>
+          <option>Cleanliness issue</option>
+          <option>Other</option>
+        </select>
+
+        <textarea id="problemDescription"
+          placeholder="Describe the problem"
+          required></textarea>
+
+        <button type="submit">Submit Complaint</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Complaint History</h2>
+      <div id="complaintHistory"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 AquaFind | College Design Thinking Project</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>
