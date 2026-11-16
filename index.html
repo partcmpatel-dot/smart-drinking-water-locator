@@ -1,391 +1,472 @@
 
-// ==========================================
-// AQUAFIND - SMART DRINKING WATER LOCATOR
-// Complete JavaScript
-// ==========================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// 1. DEMO WATER POINTS
-const waterPoints = [
-  { name: "Demo Water Point 1", area: "Kharar Main Market", lat: 30.7465, lng: 76.6465, status: "Demo listing" },
-  { name: "Demo Water Point 2", area: "Kharar Bus Stand", lat: 30.7445, lng: 76.6475, status: "Demo listing" },
-  { name: "Demo Water Point 3", area: "Kharar Landran Road", lat: 30.7395, lng: 76.6550, status: "Demo listing" },
-  { name: "Demo Water Point 4", area: "Sunny Enclave, Kharar", lat: 30.7215, lng: 76.6450, status: "Demo listing" },
-  { name: "Demo Water Point 5", area: "Landran, Mohali", lat: 30.6870, lng: 76.6500, status: "Demo listing" },
-  { name: "Demo Water Point 6", area: "Airport Road, Mohali", lat: 30.6750, lng: 76.7350, status: "Demo listing" },
-  { name: "Demo Water Point 7", area: "Phase 3B2, Mohali", lat: 30.7100, lng: 76.7180, status: "Demo listing" },
-  { name: "Demo Water Point 8", area: "Phase 7, Mohali", lat: 30.7050, lng: 76.7080, status: "Demo listing" },
-  { name: "Demo Water Point 9", area: "Sector 17, Chandigarh", lat: 30.7415, lng: 76.7820, status: "Demo listing" },
-  { name: "Demo Water Point 10", area: "Sector 22, Chandigarh", lat: 30.7330, lng: 76.7720, status: "Demo listing" },
-  { name: "Demo Water Point 11", area: "Sector 35, Chandigarh", lat: 30.7190, lng: 76.7510, status: "Demo listing" },
-  { name: "Demo Water Point 12", area: "Sector 15, Chandigarh", lat: 30.7590, lng: 76.7680, status: "Demo listing" },
-  { name: "Demo Water Point 13", area: "Sector 43, Chandigarh", lat: 30.7140, lng: 76.7560, status: "Demo listing" },
-  { name: "Demo Water Point 14", area: "Sector 34, Chandigarh", lat: 30.7250, lng: 76.7620, status: "Demo listing" },
-  { name: "Demo Water Point 15", area: "Sector 26, Chandigarh", lat: 30.7270, lng: 76.8010, status: "Demo listing" }
-];
+  <title>AquaFind | Smart Water Locator</title>
 
-// 2. GLOBAL VARIABLES
-let userLocation = null;
-let searchText = "";
-let map = null;
-let markerLayer = null;
-let userMarker = null;
-let accuracyCircle = null;
+  <meta name="description"
+    content="AquaFind - Smart Drinking Water Locator System">
 
-// 3. INITIALIZE MAP
-function initializeMap() {
-  const mapElement = document.getElementById("map");
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-  if (!mapElement) {
-    console.error("Map container not found.");
-    return;
-  }
+  <!-- Website CSS -->
+  <link rel="stylesheet" href="./style.css">
 
-  if (typeof L === "undefined") {
-    mapElement.textContent =
-      "Map library failed to load. Check your internet connection.";
-    console.error("Leaflet library is missing.");
-    return;
-  }
-
-  map = L.map("map").setView([30.7333, 76.7794], 11);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(map);
-
-  markerLayer = L.layerGroup().addTo(map);
-
-  setTimeout(() => map.invalidateSize(), 500);
-  setTimeout(() => map.invalidateSize(), 1500);
-}
-
-// 4. DISTANCE CALCULATION
-function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const toRad = value => value * Math.PI / 180;
-
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) *
-    Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) ** 2;
-
-  return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-// 5. DISPLAY WATER POINTS
-function displayWaterPoints() {
-  const list = document.getElementById("waterList");
-
-  if (!list || !map || !markerLayer) return;
-
-  markerLayer.clearLayers();
-  list.innerHTML = "";
-
-  let filtered = waterPoints.filter(point =>
-    point.name.toLowerCase().includes(searchText) ||
-    point.area.toLowerCase().includes(searchText)
-  );
-
-  if (userLocation) {
-    filtered.sort((a, b) =>
-      calculateDistance(
-        userLocation.lat, userLocation.lng, a.lat, a.lng
-      ) -
-      calculateDistance(
-        userLocation.lat, userLocation.lng, b.lat, b.lng
-      )
-    );
-  }
-
-  if (filtered.length === 0) {
-    list.textContent = "No matching demo water points found.";
-    return;
-  }
-
-  filtered.forEach(point => {
-    const marker = L.marker([point.lat, point.lng])
-      .addTo(markerLayer)
-      .bindPopup(
-        `<b>${point.name}</b><br>${point.area}<br>${point.status}`
-      );
-
-    const card = document.createElement("div");
-    card.className = "water-card";
-
-    const title = document.createElement("h3");
-    title.textContent = "💧 " + point.name;
-
-    const area = document.createElement("p");
-    area.textContent = "📍 " + point.area;
-
-    const status = document.createElement("p");
-    status.textContent = "Status: " + point.status;
-
-    card.append(title, area, status);
-
-    if (userLocation) {
-      const distance = calculateDistance(
-        userLocation.lat,
-        userLocation.lng,
-        point.lat,
-        point.lng
-      );
-
-      const distanceText = document.createElement("p");
-      distanceText.textContent =
-        "📏 Distance: " + distance.toFixed(2) + " km";
-
-      card.appendChild(distanceText);
+  <style>
+    /* 3D HERO SECTION */
+    .hero-3d {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 65px 20px;
+      margin: 25px 0;
+      border-radius: 28px;
+      color: white;
+      background: linear-gradient(135deg, #0077d9, #003b82);
+      box-shadow: 0 20px 40px rgba(0, 65, 140, .25);
     }
 
-    const mapButton = document.createElement("button");
-    mapButton.textContent = "View on Map";
-
-    mapButton.addEventListener("click", () => {
-      map.setView([point.lat, point.lng], 16);
-      marker.openPopup();
-    });
-
-    const directionButton = document.createElement("button");
-    directionButton.textContent = "Get Directions";
-    directionButton.style.marginLeft = "8px";
-
-    directionButton.addEventListener("click", () => {
-      const url =
-        "https://www.google.com/maps/dir/?api=1&destination=" +
-        encodeURIComponent(`${point.lat},${point.lng}`);
-
-      window.open(url, "_blank");
-    });
-
-    card.append(mapButton, directionButton);
-    list.appendChild(card);
-  });
-}
-
-// 6. SEARCH FUNCTION
-function setupSearch() {
-  const searchInput = document.getElementById("searchInput");
-
-  if (!searchInput) return;
-
-  searchInput.addEventListener("input", event => {
-    searchText = event.target.value.toLowerCase().trim();
-    displayWaterPoints();
-  });
-}
-
-// 7. GPS FUNCTION - SHOW USER LOCATION
-function setupGPS() {
-  const locationButton = document.getElementById("locationBtn");
-
-  if (!locationButton) return;
-
-  locationButton.addEventListener("click", () => {
-
-    if (!navigator.geolocation) {
-      alert("GPS is not supported by your browser.");
-      return;
+    .hero-3d::before,
+    .hero-3d::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      pointer-events: none;
     }
 
-    if (!map) {
-      alert("Map is not ready. Please refresh the page.");
-      return;
+    .hero-3d::before {
+      width: 250px;
+      height: 250px;
+      top: -100px;
+      left: -70px;
     }
 
-    locationButton.disabled = true;
-    locationButton.textContent = "Finding location...";
+    .hero-3d::after {
+      width: 190px;
+      height: 190px;
+      right: -50px;
+      bottom: -90px;
+    }
 
-    navigator.geolocation.getCurrentPosition(
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
 
-      // SUCCESS
-      position => {
-        userLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
+    .hero-drop {
+      font-size: 65px;
+      display: inline-block;
+      filter: drop-shadow(0 12px 10px rgba(0,0,0,.25));
+      animation: floatDrop 3s ease-in-out infinite;
+    }
 
-        // Remove previous GPS marker
-        if (userMarker) {
-          map.removeLayer(userMarker);
-        }
+    @keyframes floatDrop {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-12px) rotate(5deg); }
+    }
 
-        if (accuracyCircle) {
-          map.removeLayer(accuracyCircle);
-        }
+    .hero-3d h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      margin: 12px 0;
+      text-shadow: 0 5px 15px rgba(0,0,0,.25);
+    }
 
-        // Create current location marker
-        userMarker = L.marker([
-          userLocation.lat,
-          userLocation.lng
-        ]).addTo(map);
+    .hero-3d p {
+      max-width: 650px;
+      margin: 10px auto;
+      color: #e6f5ff;
+    }
 
-        userMarker.bindPopup(
-          "<b>📍 Your Current Location</b>"
-        ).openPopup();
+    .hero-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 13px 25px;
+      color: #0054a6;
+      background: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 14px;
+      box-shadow: 0 7px 0 #b9d8f2;
+      transition: .2s;
+    }
 
-        // Add GPS accuracy circle
-        accuracyCircle = L.circle([
-          userLocation.lat,
-          userLocation.lng
-        ], {
-          radius: position.coords.accuracy,
-          color: "#0077cc",
-          fillColor: "#3399ff",
-          fillOpacity: 0.15
-        }).addTo(map);
+    .hero-button:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 11px 0 #b9d8f2;
+    }
 
-        // Zoom into current location
-        map.setView([
-          userLocation.lat,
-          userLocation.lng
-        ], 15);
+    /* FEATURE CARDS */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 18px;
+      margin: 25px 0;
+    }
 
-        // Recalculate distances
-        displayWaterPoints();
+    .feature-card {
+      padding: 22px;
+      text-align: center;
+      background: linear-gradient(145deg, #ffffff, #e7f5ff);
+      border: 1px solid #d4eaff;
+      border-radius: 20px;
+      box-shadow: 8px 8px 18px rgba(0,70,130,.12),
+                  -5px -5px 15px white;
+      transition: .3s;
+    }
 
-        locationButton.textContent = "📍 Location Found";
-        locationButton.disabled = false;
+    .feature-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 12px 15px 25px rgba(0,70,130,.18);
+    }
 
-        alert("Your location is now displayed on the map!");
-      },
+    .feature-icon {
+      font-size: 35px;
+      margin-bottom: 8px;
+    }
 
-      // ERROR
-      error => {
-        locationButton.textContent = "📍 Find My Location";
-        locationButton.disabled = false;
+    .feature-card h3 {
+      color: #0057a9;
+      font-size: 17px;
+    }
 
-        let message = "Unable to get your location.";
+    /* SECTION NAVIGATION */
+    .quick-nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
 
-        if (error.code === 1) {
-          message = "Location permission denied. Allow location access in your browser settings.";
-        } else if (error.code === 2) {
-          message = "Location unavailable. Check your device location settings and try again.";
-        } else if (error.code === 3) {
-          message = "Location request timed out. Please try again.";
-        }
+    .quick-nav a {
+      text-decoration: none;
+      color: #07569c;
+      background: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,70,130,.1);
+    }
 
-        alert(message);
-        console.error("GPS error:", error);
-      },
+    .quick-nav a:hover {
+      background: #e0f3ff;
+    }
 
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 0
+    .admin-link {
+      display: inline-block;
+      text-decoration: none;
+      color: white;
+      background: rgba(255,255,255,.15);
+      padding: 10px 18px;
+      border: 1px solid rgba(255,255,255,.4);
+      border-radius: 12px;
+    }
+
+    .admin-link:hover {
+      background: white;
+      color: #0055aa;
+    }
+
+    .section-space {
+      scroll-margin-top: 20px;
+    }
+
+    .site-footer {
+      text-align: center;
+      padding: 30px 15px;
+      background: linear-gradient(135deg, #003b80, #0066cc);
+      color: white;
+      margin-top: 40px;
+    }
+
+    .demo-warning {
+      padding: 13px;
+      margin-top: 15px;
+      border-radius: 12px;
+      background: #fff5dc;
+      color: #805500;
+      font-size: 13px;
+    }
+
+    @media(max-width: 600px) {
+      .hero-3d {
+        padding: 45px 16px;
       }
-    );
-  });
-}
 
-// 8. SHOW COMPLAINT HISTORY
-function showComplaints() {
-  const history = document.getElementById("complaintHistory");
+      .hero-drop {
+        font-size: 50px;
+      }
 
-  if (!history) return;
-
-  let complaints = [];
-
-  try {
-    complaints = JSON.parse(
-      localStorage.getItem("aquafindComplaints") || "[]"
-    );
-  } catch (error) {
-    console.error("Complaint history error:", error);
-  }
-
-  history.innerHTML = "";
-
-  if (complaints.length === 0) {
-    history.textContent = "No complaints submitted yet.";
-    return;
-  }
-
-  complaints.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "complaint-card";
-
-    const heading = document.createElement("h3");
-    heading.textContent = item.problem;
-
-    const name = document.createElement("p");
-    name.textContent = "Reported by: " + item.name;
-
-    const description = document.createElement("p");
-    description.textContent = item.description;
-
-    const date = document.createElement("small");
-    date.textContent = item.date;
-
-    card.append(heading, name, description, date);
-    history.appendChild(card);
-  });
-}
-
-// 9. COMPLAINT FORM
-function setupComplaintForm() {
-  const form = document.getElementById("complaintForm");
-
-  if (!form) return;
-
-  form.addEventListener("submit", event => {
-    event.preventDefault();
-
-    const name = document.getElementById("personName").value.trim();
-    const problem = document.getElementById("problemType").value;
-    const description =
-      document.getElementById("problemDescription").value.trim();
-
-    if (!name || !problem || !description) {
-      alert("Please complete all fields.");
-      return;
+      .quick-nav a {
+        font-size: 13px;
+      }
     }
 
-    let complaints = [];
+    @media(prefers-reduced-motion: reduce) {
+      .hero-drop {
+        animation: none;
+      }
 
-    try {
-      complaints = JSON.parse(
-        localStorage.getItem("aquafindComplaints") || "[]"
-      );
-    } catch (error) {
-      complaints = [];
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
     }
+  </style>
+</head>
 
-    complaints.push({
-      name,
-      problem,
-      description,
-      date: new Date().toLocaleString()
-    });
+<body>
 
-    try {
-      localStorage.setItem(
-        "aquafindComplaints",
-        JSON.stringify(complaints)
-      );
-    } catch (error) {
-      alert("Could not save complaint in this browser.");
-      return;
-    }
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-content">
+      <div class="logo">💧 AquaFind</div>
 
-    alert("Your demo complaint has been saved!");
+      <p class="header-tagline">
+        Smart Drinking Water Locator System
+      </p>
 
-    form.reset();
-    showComplaints();
-  });
-}
+      <a href="./admin.html" class="admin-link">
+        ⚙ Admin Dashboard
+      </a>
+    </div>
+  </header>
 
-// 10. START AQUAFIND ONLY ONCE
-document.addEventListener("DOMContentLoaded", () => {
-  initializeMap();
-  setupSearch();
-  setupGPS();
-  setupComplaintForm();
-  displayWaterPoints();
-  showComplaints();
-});
+  <main class="container">
+
+    <!-- 3D HERO -->
+    <section class="hero-3d">
+      <div class="hero-content">
+
+        <div class="hero-drop">💧</div>
+
+        <h1>Find Water. Find Convenience.</h1>
+
+        <p>
+          Discover listed water points near your location
+          using GPS, interactive maps and smart distance calculation.
+        </p>
+
+        <a href="#search-section" class="hero-button">
+          Explore Water Points →
+        </a>
+
+      </div>
+    </section>
+
+    <!-- QUICK NAVIGATION -->
+    <nav class="quick-nav">
+      <a href="#search-section">Search</a>
+      <a href="#map-section">Map</a>
+      <a href="#water-section">Water Points</a>
+      <a href="#complaint-section">Report Problem</a>
+      <a href="#history-section">History</a>
+    </nav>
+
+    <!-- FEATURES -->
+    <section class="feature-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>GPS Location</h3>
+        <p>Find your current location.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🗺️</div>
+        <h3>Smart Map</h3>
+        <p>Explore listed water points.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📏</div>
+        <h3>Distance</h3>
+        <p>Calculate approximate distance.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Report Issues</h3>
+        <p>Submit water-related complaints.</p>
+      </div>
+
+    </section>
+
+    <!-- SEARCH -->
+    <section id="search-section"
+      class="panel search-section section-space">
+
+      <h2 class="section-heading">
+        🔍 Search Water Points
+      </h2>
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search by name or area..."
+        aria-label="Search water points">
+
+      <button
+        type="button"
+        id="locationBtn"
+        class="location-button">
+        📍 Find My Location
+      </button>
+
+      <p class="helper-text">
+        Allow location permission to calculate approximate distances.
+      </p>
+
+    </section>
+
+    <!-- MAP -->
+    <section id="map-section"
+      class="panel map-section section-space">
+
+      <h2 class="section-heading">
+        🌍 Interactive Water Point Map
+      </h2>
+
+      <div id="map"></div>
+
+      <div class="map-legend">
+        <p>🔵 Listed water point</p>
+        <p>📍 Your current location</p>
+      </div>
+
+      <div class="demo-warning">
+        Important: These are demo locations, not verified
+        drinking-water facilities. Please confirm availability
+        and water safety independently.
+      </div>
+
+    </section>
+
+    <!-- WATER POINTS -->
+    <section id="water-section"
+      class="panel water-section section-space">
+
+      <h2 class="section-heading">
+        💧 Listed Water Points
+      </h2>
+
+      <div id="waterList" class="water-list">
+        Loading water points...
+      </div>
+
+    </section>
+
+    <!-- COMPLAINT FORM -->
+    <section id="complaint-section"
+      class="panel complaint-section section-space">
+
+      <h2 class="section-heading">
+        📝 Report a Water Problem
+      </h2>
+
+      <p>
+        Help improve water-point maintenance by reporting problems.
+      </p>
+
+      <form id="complaintForm">
+
+        <label for="personName">Your Name</label>
+
+        <input
+          type="text"
+          id="personName"
+          placeholder="Enter your name"
+          required>
+
+        <label for="problemType">Problem Type</label>
+
+        <select id="problemType" required>
+          <option value="">Select a problem</option>
+          <option value="Water Not Available">Water Not Available</option>
+          <option value="Damaged Tap">Damaged Tap</option>
+          <option value="Dirty Water">Dirty Water</option>
+          <option value="Poor Maintenance">Poor Maintenance</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="problemDescription">
+          Describe the Problem
+        </label>
+
+        <textarea
+          id="problemDescription"
+          rows="4"
+          placeholder="Enter problem details..."
+          required></textarea>
+
+        <button type="submit" class="submit-button">
+          Submit Complaint →
+        </button>
+
+      </form>
+
+      <p class="note">
+        Demo complaints are stored locally in this browser.
+        They are not automatically sent to a maintenance team.
+      </p>
+
+    </section>
+
+    <!-- HISTORY -->
+    <section id="history-section"
+      class="panel history-section section-space">
+
+      <h2 class="section-heading">
+        📋 Complaint History
+      </h2>
+
+      <div id="complaintHistory">
+        No complaints submitted yet.
+      </div>
+
+    </section>
+
+    <!-- ABOUT -->
+    <section class="panel about-section">
+
+      <h2 class="section-heading">
+        About AquaFind
+      </h2>
+
+      <p>
+        AquaFind is a Design Thinking project focused on helping
+        people locate listed drinking-water points more conveniently.
+      </p>
+
+      <p>
+        It uses GPS, interactive maps, distance calculation
+        and complaint reporting to demonstrate a smart locator system.
+      </p>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <h2>💧 AquaFind</h2>
+    <p>Smart Drinking Water Locator System</p>
+    <p>Design Thinking Project | 2026</p>
+  </footer>
+
+  <!-- Leaflet Library: Load Before script.js -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+
+  <!-- Your Existing JavaScript -->
+  <script src="./script.js"></script>
+
+</body>
+</html>
