@@ -1,434 +1,193 @@
 
-/* =========================================
-   AQUAFIND - SMART WATER LOCATOR
-   PROFESSIONAL BLUE & WHITE DESIGN
-========================================= */
-
-/* GLOBAL RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f1f7fc;
-    color: #243447;
-    line-height: 1.6;
-}
-
-/* HEADER */
-.main-header {
-    background: linear-gradient(135deg, #005baa, #008fc9, #00b4d8);
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 70, 130, 0.2);
-}
-
-.header-content {
-    max-width: 1100px;
-    margin: auto;
-}
-
-.logo {
-    font-size: 38px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.main-header p {
-    font-size: 17px;
-    margin-top: 5px;
-}
-
-.header-tagline {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 7px 16px;
-    border: 1px solid rgba(255,255,255,0.5);
-    border-radius: 25px;
-    font-size: 13px;
-}
-
-/* MAIN CONTAINER */
-.container {
-    width: 92%;
-    max-width: 1100px;
-    margin: 30px auto;
-}
-
-/* WELCOME SECTION */
-.welcome-section {
-    text-align: center;
-    padding: 25px 15px;
-}
-
-.welcome-section h1 {
-    color: #075b9b;
-    font-size: 29px;
-    margin-bottom: 8px;
-}
-
-.welcome-section p {
-    color: #62768a;
-    font-size: 15px;
-}
-
-/* COMMON PANELS */
-.panel {
-    background: white;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 15px;
-    box-shadow: 0 4px 18px rgba(0, 70, 130, 0.07);
-    border: 1px solid #e3edf5;
-}
-
-/* SECTION HEADINGS */
-.section-heading {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-bottom: 20px;
-}
-
-.section-icon {
-    width: 43px;
-    height: 43px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #e5f5ff;
-    border-radius: 11px;
-    font-size: 22px;
-    flex-shrink: 0;
-}
-
-.section-heading h2 {
-    color: #075b9b;
-    font-size: 21px;
-}
-
-.section-heading p {
-    color: #8493a2;
-    font-size: 13px;
-}
-
-/* INPUTS */
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #d4e0ea;
-    border-radius: 9px;
-    background: #fbfdff;
-    color: #263746;
-    font-size: 15px;
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 16px;
-    transition: 0.3s;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #008bd0;
-    box-shadow: 0 0 0 3px rgba(0, 139, 208, 0.12);
-}
-
-textarea {
-    resize: vertical;
-    min-height: 110px;
-}
-
-/* LABELS */
-label {
-    display: block;
-    color: #31516b;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 7px;
-}
-
-/* BUTTONS */
-button {
-    border: none;
-    border-radius: 9px;
-    padding: 13px 20px;
-    background: #0077c8;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.25s;
-}
-
-button:hover {
-    background: #005fa5;
-    transform: translateY(-2px);
-}
-
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* GPS BUTTON */
-.location-button {
-    width: 100%;
-    background: #00a878;
-    margin-top: 2px;
-}
-
-.location-button:hover {
-    background: #00845d;
-}
-
-.helper-text {
-    color: #8293a3;
-    font-size: 12px;
-    margin-top: 10px;
-    text-align: center;
-}
-
-/* MAP */
-#map {
-    width: 100%;
-    height: 450px !important;
-    min-height: 450px;
-    border-radius: 12px;
-    border: 1px solid #d5e3ee;
-    overflow: hidden;
-    z-index: 1;
-    background: #e7f0f5;
-}
-
-/* MAP LEGEND */
-.map-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    padding: 12px 5px 0;
-    color: #526a7e;
-    font-size: 13px;
-}
-
-.note {
-    color: #8493a2;
-    font-size: 12px;
-    margin-top: 10px;
-}
-
-/* WATER POINT LIST */
-.water-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 18px;
-}
-
-.water-card {
-    padding: 18px;
-    background: #f6fbff;
-    border: 1px solid #dceaf5;
-    border-left: 4px solid #00a1d6;
-    border-radius: 11px;
-    transition: 0.3s;
-}
-
-.water-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0, 80, 140, 0.12);
-}
-
-.water-card h3 {
-    color: #0066a8;
-    font-size: 17px;
-    margin-bottom: 9px;
-}
-
-.water-card p {
-    color: #596d80;
-    font-size: 13px;
-    margin-bottom: 7px;
-    overflow-wrap: anywhere;
-}
-
-.water-card button {
-    margin-top: 9px;
-    margin-right: 5px;
-    padding: 10px 12px;
-    font-size: 12px;
-}
-
-/* COMPLAINT FORM */
-.complaint-section form {
-    display: flex;
-    flex-direction: column;
-}
-
-.submit-button {
-    width: 100%;
-    background: #0077c8;
-    margin-top: 5px;
-}
-
-.submit-button:hover {
-    background: #005fa5;
-}
-
-/* COMPLAINT HISTORY */
-#complaintHistory {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 15px;
-}
-
-.complaint-card {
-    background: #f6fbff;
-    border: 1px solid #dceaf5;
-    border-radius: 10px;
-    padding: 17px;
-    overflow-wrap: anywhere;
-}
-
-.complaint-card h3 {
-    color: #006ba9;
-    margin-bottom: 8px;
-    font-size: 16px;
-}
-
-.complaint-card p {
-    color: #536a7e;
-    font-size: 13px;
-    margin-bottom: 6px;
-}
-
-.complaint-card small {
-    color: #8595a5;
-    font-size: 11px;
-}
-
-/* PROJECT INFORMATION */
-.project-info {
-    background: #e5f5ff;
-    border-left: 5px solid #008fca;
-    padding: 23px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-}
-
-.project-info h2 {
-    color: #075b9b;
-    margin-bottom: 9px;
-    font-size: 20px;
-}
-
-.project-info p {
-    color: #526a7e;
-    font-size: 14px;
-}
-
-/* FOOTER */
-footer {
-    background: #063b63;
-    color: white;
-    text-align: center;
-    padding: 28px 15px;
-    margin-top: 35px;
-}
-
-footer h3 {
-    font-size: 22px;
-    margin-bottom: 5px;
-}
-
-footer p {
-    font-size: 13px;
-    color: #d4e7f5;
-    margin-top: 4px;
-}
-
-/* MOBILE RESPONSIVE */
-@media (max-width: 600px) {
-
-    .main-header {
-        padding: 30px 12px;
-    }
-
-    .logo {
-        font-size: 30px;
-    }
-
-    .main-header p {
-        font-size: 14px;
-    }
-
-    .header-tagline {
-        font-size: 11px;
-    }
-
-    .container {
-        width: 94%;
-        margin: 18px auto;
-    }
-
-    .welcome-section h1 {
-        font-size: 23px;
-    }
-
-    .welcome-section p {
-        font-size: 13px;
-    }
-
-    .panel {
-        padding: 17px;
-        margin-bottom: 18px;
-    }
-
-    .section-heading h2 {
-        font-size: 18px;
-    }
-
-    .section-icon {
-        width: 38px;
-        height: 38px;
-        font-size: 19px;
-    }
-
-    #map {
-        height: 350px !important;
-        min-height: 350px;
-    }
-
-    .water-list,
-    #complaintHistory {
-        grid-template-columns: 1fr;
-    }
-
-    .water-card button {
-        margin: 7px 3px 0 0;
-    }
-
-    .map-legend {
-        gap: 10px;
-        font-size: 11px;
-    }
-}
-
-/* ACCESSIBILITY */
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-    outline: 3px solid rgba(0, 119, 200, 0.25);
-    outline-offset: 2px;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AquaFind - Smart Drinking Water Locator</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <h1>💧 AquaFind</h1>
+            <p>Smart Drinking Water Locator System</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- INTRODUCTION -->
+        <section class="welcome-section">
+            <h2>Find Drinking Water Near You</h2>
+            <p>
+                Locate nearby listed water points, check estimated distances
+                and report water-related problems.
+            </p>
+        </section>
+
+        <!-- SEARCH AND GPS -->
+        <section class="search-section">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search water point or area..."
+                autocomplete="off"
+            >
+
+            <button type="button" id="locationBtn">
+                📍 Use My Current Location
+            </button>
+
+        </section>
+
+        <!-- MAP -->
+        <section class="map-section">
+            <h2>Water Points Map</h2>
+
+            <div id="map"></div>
+
+            <p class="map-note">
+                Map markers are demonstration listings and are not verified
+                drinking-water facilities.
+            </p>
+        </section>
+
+        <!-- WATER POINTS -->
+        <section class="water-section">
+
+            <h2>Nearby Water Points</h2>
+
+            <p>
+                Explore listed demonstration locations and their estimated
+                straight-line distances from your location.
+            </p>
+
+            <div id="waterList">
+                Loading water points...
+            </div>
+
+        </section>
+
+        <!-- COMPLAINT FORM -->
+        <section class="complaint-section">
+
+            <h2>Report a Water Problem</h2>
+
+            <p>
+                Submit a report about a listed water point.
+            </p>
+
+            <form id="complaintForm">
+
+                <label for="personName">Your Name</label>
+
+                <input
+                    type="text"
+                    id="personName"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <label for="problemType">Problem Type</label>
+
+                <select id="problemType" required>
+                    <option value="">Select a problem</option>
+                    <option value="Water Not Available">
+                        Water Not Available
+                    </option>
+                    <option value="Dirty Water">
+                        Dirty Water
+                    </option>
+                    <option value="Damaged Water Facility">
+                        Damaged Water Facility
+                    </option>
+                    <option value="Other">
+                        Other
+                    </option>
+                </select>
+
+                <label for="problemDescription">
+                    Describe the Problem
+                </label>
+
+                <textarea
+                    id="problemDescription"
+                    rows="4"
+                    placeholder="Explain the problem..."
+                    required
+                ></textarea>
+
+                <button type="submit">
+                    Submit Complaint
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- COMPLAINT HISTORY -->
+        <section class="history-section">
+
+            <h2>Complaint History</h2>
+
+            <div id="complaintHistory">
+                No complaints submitted yet.
+            </div>
+
+        </section>
+
+        <!-- PROJECT INFORMATION -->
+        <section class="about-section">
+
+            <h2>About AquaFind</h2>
+
+            <p>
+                AquaFind is a Design Thinking project developed to make
+                locating drinking-water points easier. It provides a map,
+                location-based distance estimates and a complaint reporting
+                interface.
+            </p>
+
+            <p>
+                The current version uses demonstration water-point data.
+                Actual water availability and water quality must be verified
+                before visiting or drinking.
+            </p>
+
+        </section>
+
+        <!-- ADMIN LINK -->
+        <section class="admin-link-section">
+            <a href="admin.html">
+                Admin Dashboard →
+            </a>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>
+            © 2026 AquaFind | Smart Drinking Water Locator System
+        </p>
+        <p>Design Thinking Project</p>
+    </footer>
+
+    <!-- LEAFLET MAP LIBRARY -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- MAIN JAVASCRIPT -->
+    <script src="script.js"></script>
+
+</body>
+</html>
