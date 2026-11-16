@@ -149,8 +149,57 @@ document.getElementById("searchInput").addEventListener("input", event => {
   displayWaterPoints();
 });
 
+
 // Find current location
 document.getElementById("locationBtn").addEventListener("click", () => {
+  const button = document.getElementById("locationBtn");
+
+  if (!navigator.geolocation) {
+    alert("GPS is not supported by your browser.");
+    return;
+  }
+
+  button.textContent = "Finding your location...";
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      // Show your current location on the map
+      map.setView(
+        [userLocation.lat, userLocation.lng],
+        14
+      );
+
+      L.marker([userLocation.lat, userLocation.lng])
+        .addTo(map)
+        .bindPopup("Your current location")
+        .openPopup();
+
+      // Refresh cards and calculate distances
+      displayWaterPoints();
+
+      button.textContent = "📍 Location Found";
+
+      alert("Location found! Check the distances in the water-point cards.");
+    },
+
+    error => {
+      button.textContent = "📍 Find My Location";
+      alert("Unable to find location. Please try again.");
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+});
+
   if (!navigator.geolocation) {
     alert("Location is not supported by this browser.");
     return;
